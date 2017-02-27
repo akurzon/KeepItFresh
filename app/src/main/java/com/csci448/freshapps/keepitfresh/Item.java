@@ -1,10 +1,12 @@
 package com.csci448.freshapps.keepitfresh;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Item {
     private String mName;
     private Date mExpirationDate, mPurchaseDate;
+    private UUID mId;
 
     /**
      * testing constructor
@@ -14,6 +16,7 @@ public class Item {
         mName = name;
         mExpirationDate = new Date();
         mPurchaseDate = new Date();
+        mId = UUID.randomUUID();
     }
 
     /**
@@ -26,6 +29,7 @@ public class Item {
         mName = name;
         mExpirationDate = expirationDate;
         mPurchaseDate = purchaseDate;
+        mId = UUID.randomUUID();
     }
 
     public void setName(String name) {
@@ -50,5 +54,9 @@ public class Item {
 
     public Date getPurchaseDate() {
         return mPurchaseDate;
+    }
+
+    public UUID getId() {
+        return mId;
     }
 }

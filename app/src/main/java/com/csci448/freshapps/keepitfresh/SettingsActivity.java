@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 public class SettingsActivity extends AppCompatActivity {
 
 
+    public static String KEY_PREF_SAVE_DEFAULT = "pref_save_to_default";
+    public static String KEY_PREF_CHOOSE_DEFAULT = "pref_choose_default";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

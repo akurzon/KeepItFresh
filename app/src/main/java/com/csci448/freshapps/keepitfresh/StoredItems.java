@@ -1,6 +1,8 @@
 package com.csci448.freshapps.keepitfresh;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,4 +41,39 @@ public class StoredItems {
         }
         return null;
     }
+
+    public List<Item> sortByName() {
+        List<Item> sortedList = new ArrayList<>(mItemList);
+        Collections.sort(sortedList, new Comparator<Item>() {
+            @Override
+            public int compare(Item item1, Item item2) {
+                return item1.getName().compareTo(item2.getName());
+            }
+        });
+        return sortedList;
+    }
+
+    public List<Item> sortByExpirationDate() {
+        List<Item> sortedList = new ArrayList<>(mItemList);
+        Collections.sort(sortedList, new Comparator<Item>() {
+            @Override
+            public int compare(Item item1, Item item2) {
+                return item1.getExpirationDate().compareTo(item2.getExpirationDate());
+            }
+        });
+        return sortedList;
+    }
+
+    public List<Item> sortByPurchaseDate() {
+        List<Item> sortedList = new ArrayList<>(mItemList);
+        Collections.sort(sortedList, new Comparator<Item>() {
+            @Override
+            public int compare(Item item1, Item item2) {
+                return item1.getPurchaseDate().compareTo(item2.getPurchaseDate());
+            }
+        });
+        return sortedList;
+    }
+
+
 }

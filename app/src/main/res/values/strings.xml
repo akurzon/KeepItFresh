@@ -4,6 +4,11 @@
     <string name="filter_by">filter by ...</string>
     <string name="settings">Settings</string>
     <string name="pref_save_to_default">Save items to default location</string>
-    <string name="pref_save_to_default_summ">When an item is created, it will automatically be sent to the default location you choose, rather than asking where to put it</string>
+    <string name="pref_save_to_default_summ">When an item is created, it will automatically be sent
+        to the default location you choose, rather than asking where to put it.</string>
     <string name="pref_choose_default">Choose the default location</string>
+    <string name="pref_item_location_default">1</string>
+    <string name="pref_move_expired_items_to_cart">Expired items go to the shopping list</string>
+    <string name="pref_move_expired_items_to_cart_summ">When an item expires, it will automatically
+        appear in your shopping list.</string>
 </resources>

@@ -5,11 +5,9 @@
         <item>Pantry</item>
         <item>Freezer</item>
     </string-array>
-    <integer-array name="pref_item_location_values">
+    <string-array name="pref_item_location_values">
         <item>1</item>
         <item>2</item>
         <item>3</item>
-    </integer-array>
-
-
+    </string-array>
 </resources>

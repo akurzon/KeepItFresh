@@ -15,8 +15,4 @@ public class ItemListActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
     }
-
-
-
-
 }

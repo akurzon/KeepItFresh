@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">KeepItFresh</string>
     <string name="new_item">New Item</string>
+    <string name="filter_by">filter by ...</string>
+    <string name="settings">Settings</string>
+    <string name="pref_save_to_default">Save items to default location</string>
+    <string name="pref_save_to_default_summ">When an item is created, it will automatically be sent to the default location you choose, rather than asking where to put it</string>
+    <string name="pref_choose_default">Choose the default location</string>
 </resources>

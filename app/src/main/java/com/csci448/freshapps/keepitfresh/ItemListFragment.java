@@ -51,6 +51,13 @@ public class ItemListFragment extends Fragment {
             case R.id.menu_item_new_item:
                 Toast.makeText(getActivity(), "Added a new item", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.menu_item_filter_by:
+                Toast.makeText(getActivity(), "will filter", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_item_settings:
+                Toast.makeText(getActivity(), "will open settings", Toast.LENGTH_SHORT).show();
+                Intent i = SettingsActivity.newIntent(getActivity());
+                startActivity(i);
             default:
                 return super.onOptionsItemSelected(item);
         }

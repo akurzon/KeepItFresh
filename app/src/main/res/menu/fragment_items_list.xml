@@ -6,6 +6,12 @@
         android:icon="@drawable/ic_menu_add"
         android:title="@string/new_item"
         app:showAsAction="ifRoom"/>
-
-
+    <item
+        android:id="@+id/menu_item_filter_by"
+        android:title="@string/filter_by"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_settings"
+        android:title="@string/settings"
+        app:showAsAction="never"/>
 </menu>

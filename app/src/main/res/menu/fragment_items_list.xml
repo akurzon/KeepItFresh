@@ -7,7 +7,7 @@
         android:title="@string/new_item"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/menu_item_filter_by"
+        android:id="@+id/menu_item_sort_by"
         android:title="@string/filter_by"
         app:showAsAction="never"/>
     <item

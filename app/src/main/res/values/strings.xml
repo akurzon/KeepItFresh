@@ -11,4 +11,8 @@
     <string name="pref_move_expired_items_to_cart">Expired items go to the shopping list</string>
     <string name="pref_move_expired_items_to_cart_summ">When an item expires, it will automatically
         appear in your shopping list.</string>
+    <string name="sort_by_name">name</string>
+    <string name="sort_by_expire_date">Expiration Date</string>
+    <string name="sort_by_purchase_date">Purchase Date</string>
+    <string name="sort_menu_text">Sort by...</string>
 </resources>

@@ -1,9 +1,14 @@
 package com.csci448.freshapps.keepitfresh;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +22,9 @@ import java.util.List;
 
 
 public class ItemListFragment extends Fragment {
+
+    private static final int REQUEST_OPTION = 0;
+    private static final String DIALOG_OPTION = "option";
     private RecyclerView mCrimeRecyclerView;
     private ItemAdapter mItemAdapter;
 
@@ -27,13 +35,24 @@ public class ItemListFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_OPTION) {
+            SortOptions option = (SortOptions)
+                    data.getSerializableExtra(SortOptionsDialogFragment.EXTRA_SORT_OPTION);
+            updateUI(option);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View view = inflater.inflate(R.layout.fragment_items_list, container, false);
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.items_list_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
+        
         updateUI();
 
         return view;
@@ -51,8 +70,11 @@ public class ItemListFragment extends Fragment {
             case R.id.menu_item_new_item:
                 Toast.makeText(getActivity(), "Added a new item", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.menu_item_filter_by:
+            case R.id.menu_item_sort_by:
                 Toast.makeText(getActivity(), "will filter", Toast.LENGTH_SHORT).show();
+                SortOptionsDialogFragment dialog = new SortOptionsDialogFragment();
+                dialog.setTargetFragment(ItemListFragment.this, REQUEST_OPTION);
+                dialog.show(getFragmentManager(), DIALOG_OPTION);
                 return true;
             case R.id.menu_item_settings:
                 Toast.makeText(getActivity(), "will open settings", Toast.LENGTH_SHORT).show();
@@ -63,9 +85,36 @@ public class ItemListFragment extends Fragment {
         }
     }
 
+    public void updateUI(SortOptions option) {
+        StoredItems storedItems = StoredItems.getInstance();
+        List<Item> items;
+        switch (option) {
+            case EXPIRE:
+                items = storedItems.sortByExpirationDate();
+                break;
+            case NAME:
+                items = storedItems.sortByName();
+                break;
+            case PURCHASE:
+                items = storedItems.sortByPurchaseDate();
+                break;
+            default:
+                items = storedItems.sortByExpirationDate();
+        }
+
+        if (mItemAdapter == null) {
+            mItemAdapter = new ItemAdapter(items);
+            mCrimeRecyclerView.setAdapter(mItemAdapter);
+        }
+        else {
+            mItemAdapter.notifyDataSetChanged();
+        }
+    }
+
     public void updateUI() {
         StoredItems storedItems = StoredItems.getInstance();
-        List<Item> items = storedItems.getItemList();
+        List<Item> items = storedItems.sortByExpirationDate();
+
         if (mItemAdapter == null) {
             mItemAdapter = new ItemAdapter(items);
             mCrimeRecyclerView.setAdapter(mItemAdapter);

@@ -8,12 +8,21 @@
     <TextView
         android:id="@+id/item_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/temp_detail"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Detail View for the Item"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
+    <Button
+        android:id="@+id/item_expire_date_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/item_purchase_date_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <CheckBox
+        android:id="@+id/item_detail_editable_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item_detail_editable_checkbox"
+        android:checked="false"/>
 </LinearLayout>

@@ -3,12 +3,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
-
 
 public class ItemListFragment extends Fragment {
 
@@ -39,6 +34,14 @@ public class ItemListFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
+
+        // TODO: 3/3/17 change from if else to switch case for handling requests
+//        switch (requestCode) {
+//            case REQUEST_OPTION:
+//                break;
+//            default:
+//                break;
+//        }
         if (requestCode == REQUEST_OPTION) {
             SortOptions option = (SortOptions)
                     data.getSerializableExtra(SortOptionsDialogFragment.EXTRA_SORT_OPTION);
@@ -107,6 +110,7 @@ public class ItemListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mItemAdapter);
         }
         else {
+            mItemAdapter.updateItems(items);
             mItemAdapter.notifyDataSetChanged();
         }
     }
@@ -120,7 +124,7 @@ public class ItemListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mItemAdapter);
         }
         else {
-            mItemAdapter.notifyDataSetChanged();
+            mItemAdapter.updateItems(items);
         }
     }
 
@@ -183,6 +187,11 @@ public class ItemListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mItems.size();
+        }
+
+        public void updateItems(List<Item> items) {
+            mItems = items;
+            notifyDataSetChanged();
         }
     }
 }

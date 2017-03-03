@@ -1,5 +1,6 @@
 package com.csci448.freshapps.keepitfresh;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,13 +10,13 @@ public class Item {
     private UUID mId;
 
     /**
-     * testing constructor
+     * testing constructor generates a random expire date and purchase date
      * @param name is the item name
      */
     public Item(String name) {
         mName = name;
-        mExpirationDate = new Date();
-        mPurchaseDate = new Date();
+        mExpirationDate = generateRandomDate(2017, 2018);
+        mPurchaseDate = generateRandomDate(2015, 2016);
         mId = UUID.randomUUID();
     }
 
@@ -58,5 +59,17 @@ public class Item {
 
     public UUID getId() {
         return mId;
+    }
+
+    private Date generateRandomDate(int startYear, int endYear) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(startYear, 1, 1);
+        long startTime = calendar.getTimeInMillis();
+        calendar.set(endYear, 12, 31);
+        long endTime = calendar.getTimeInMillis();
+        long randomTime = startTime + (long)(Math.random()*(endTime-startTime));
+
+        calendar.setTimeInMillis(randomTime);
+        return calendar.getTime();
     }
 }

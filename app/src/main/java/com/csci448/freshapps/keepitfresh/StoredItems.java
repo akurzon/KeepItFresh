@@ -9,6 +9,7 @@ import java.util.UUID;
 public class StoredItems {
     private static StoredItems sStoredItems;
     private List<Item> mItemList;
+    private List<Item> mShoppingList;
 
     public static StoredItems getInstance() {
         if (sStoredItems == null) {
@@ -29,8 +30,16 @@ public class StoredItems {
         return mItemList;
     }
 
-    public void addItem(Item i) {
+    public List<Item> getShoppingList() {
+        return mShoppingList;
+    }
+
+    public void addItemToItemList(Item i) {
         mItemList.add(i);
+    }
+
+    public void addItemToShoppingList(Item i) {
+        mShoppingList.add(i);
     }
 
     public Item getItem(UUID id) {
@@ -39,11 +48,22 @@ public class StoredItems {
                 return item;
             }
         }
+        for (Item item : mShoppingList) {
+            if (item.getId().equals(id)) {
+                return item;
+            }
+        }
         return null;
     }
 
-    public List<Item> sortByName() {
-        List<Item> sortedList = new ArrayList<>(mItemList);
+    public List<Item> sortByName(ItemType type) {
+        List<Item> sortedList;
+        if (type.equals(ItemType.STORED)) {
+            sortedList = new ArrayList<>(mItemList);
+        }
+        else {
+            sortedList = new ArrayList<>(mShoppingList);
+        }
         Collections.sort(sortedList, new Comparator<Item>() {
             @Override
             public int compare(Item item1, Item item2) {
@@ -53,8 +73,14 @@ public class StoredItems {
         return sortedList;
     }
 
-    public List<Item> sortByExpirationDate() {
-        List<Item> sortedList = new ArrayList<>(mItemList);
+    public List<Item> sortByExpirationDate(ItemType type) {
+        List<Item> sortedList;
+        if (type.equals(ItemType.STORED)) {
+            sortedList = new ArrayList<>(mItemList);
+        }
+        else {
+            sortedList = new ArrayList<>(mShoppingList);
+        }
         Collections.sort(sortedList, new Comparator<Item>() {
             @Override
             public int compare(Item item1, Item item2) {
@@ -64,8 +90,14 @@ public class StoredItems {
         return sortedList;
     }
 
-    public List<Item> sortByPurchaseDate() {
-        List<Item> sortedList = new ArrayList<>(mItemList);
+    public List<Item> sortByPurchaseDate(ItemType type) {
+        List<Item> sortedList;
+        if (type.equals(ItemType.STORED)) {
+            sortedList = new ArrayList<>(mItemList);
+        }
+        else {
+            sortedList = new ArrayList<>(mShoppingList);
+        }
         Collections.sort(sortedList, new Comparator<Item>() {
             @Override
             public int compare(Item item1, Item item2) {
@@ -74,6 +106,4 @@ public class StoredItems {
         });
         return sortedList;
     }
-
-
 }

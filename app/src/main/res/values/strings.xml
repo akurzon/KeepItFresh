@@ -17,4 +17,5 @@
     <string name="sort_menu_text">Sort by...</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
+    <string name="item_detail_editable_checkbox">Edit</string>
 </resources>

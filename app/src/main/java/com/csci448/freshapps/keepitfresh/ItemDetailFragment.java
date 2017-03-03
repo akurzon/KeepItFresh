@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.UUID;
@@ -14,6 +16,8 @@ public class ItemDetailFragment extends Fragment {
     private static final String ITEM_ID = "item_id";
 
     private TextView mTitle;
+    private Button mExpireDate, mPurchaseDate;
+    private CheckBox mEditCheckBox;
 
     private Item mItem;
 
@@ -38,7 +42,15 @@ public class ItemDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         mTitle = (TextView) v.findViewById(R.id.item_title);
+        mExpireDate = (Button) v.findViewById(R.id.item_expire_date_button);
+        mPurchaseDate = (Button) v.findViewById(R.id.item_purchase_date_button);
+        mEditCheckBox = (CheckBox) v.findViewById(R.id.item_detail_editable_checkbox);
+
         mTitle.setText(mItem.getName());
+        // TODO: 3/2/17 get better date formatting
+        // TODO: 3/2/17 change to string resource with insert formatting
+        mExpireDate.setText("exp: " + mItem.getExpirationDate().toString());
+        mPurchaseDate.setText("pur: " + mItem.getPurchaseDate().toString());
 
         return v;
     }

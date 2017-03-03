@@ -9,10 +9,6 @@ import android.widget.TextView;
 
 import java.util.UUID;
 
-/**
- * Created by Nate on 2/27/2017.
- */
-
 public class ItemDetailFragment extends Fragment {
 
     private static final String ITEM_ID = "item_id";

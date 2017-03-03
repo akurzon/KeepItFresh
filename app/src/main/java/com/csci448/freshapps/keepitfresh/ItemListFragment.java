@@ -126,6 +126,8 @@ public class ItemListFragment extends Fragment {
 
     private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mItemNameTextView;
+        private TextView mExpireDateTextView;
+        private TextView mPurchaseDateTextView;
         private Item mItem;
 
         public ItemHolder(View itemView) {
@@ -135,11 +137,19 @@ public class ItemListFragment extends Fragment {
 
             mItemNameTextView = (TextView)
                     itemView.findViewById(R.id.list_item_grocery_item_name_text_view);
+            mExpireDateTextView = (TextView)
+                    itemView.findViewById(R.id.list_item_grocery_item_expire_date_text_view);
+            mPurchaseDateTextView = (TextView)
+                    itemView.findViewById(R.id.list_item_grocery_item_purchase_date_text_view);
         }
 
         public void bindItem(Item item) {
             mItem = item;
             mItemNameTextView.setText(mItem.getName());
+            // TODO: 3/2/17 get better date formatting
+            // TODO: 3/2/17 change to string resource with insert formatting
+            mExpireDateTextView.setText("exp: " + mItem.getExpirationDate().toString());
+            mPurchaseDateTextView.setText("pur: " + mItem.getPurchaseDate().toString());
         }
 
         @Override

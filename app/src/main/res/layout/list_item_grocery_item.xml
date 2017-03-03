@@ -11,4 +11,16 @@
         android:textStyle="bold"
         android:padding="4dp"
         tools:text="Item Name"/>
+    <TextView
+        android:id="@+id/list_item_grocery_item_expire_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_grocery_item_name_text_view"
+        tools:text="Expiration Date"/>
+    <TextView
+        android:id="@+id/list_item_grocery_item_purchase_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_grocery_item_expire_date_text_view"
+        tools:text="Purchase Date"/>
 </RelativeLayout>

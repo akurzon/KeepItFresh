@@ -95,16 +95,16 @@ public class ItemListFragment extends Fragment {
         List<Item> items;
         switch (option) {
             case EXPIRE:
-                items = storedItems.sortByExpirationDate();
+                items = storedItems.sortByExpirationDate(ItemType.STORED);
                 break;
             case NAME:
-                items = storedItems.sortByName();
+                items = storedItems.sortByName(ItemType.STORED);
                 break;
             case PURCHASE:
-                items = storedItems.sortByPurchaseDate();
+                items = storedItems.sortByPurchaseDate(ItemType.STORED);
                 break;
             default:
-                items = storedItems.sortByExpirationDate();
+                items = storedItems.sortByExpirationDate(ItemType.STORED);
         }
 
         if (mItemAdapter == null) {
@@ -118,7 +118,7 @@ public class ItemListFragment extends Fragment {
 
     public void updateUI() {
         StoredItems storedItems = StoredItems.getInstance();
-        List<Item> items = storedItems.sortByExpirationDate();
+        List<Item> items = storedItems.sortByExpirationDate(ItemType.STORED);
 
         if (mItemAdapter == null) {
             mItemAdapter = new ItemAdapter(items);

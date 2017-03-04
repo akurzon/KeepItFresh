@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KeepItFresh</string>
+    <string name="app_name">Keep It Fresh</string>
     <string name="new_item">New Item</string>
     <string name="filter_by">filter by ...</string>
     <string name="settings">Settings</string>
@@ -17,4 +17,8 @@
     <string name="sort_menu_text">Sort by...</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
+    <string name="about_page_title">About Keep It Fresh</string>
+    <string name="about_page_info_1">Keep It Fresh was written and designed by
+        \nAleksandr Kurzon and Nathan Pohl.</string>
+    <string name="about_page_info_2">The icon used for the app was designed by Madebyoliver on flaticon.com</string>
 </resources>

@@ -80,9 +80,11 @@ public class ItemListFragment extends Fragment {
                 Toast.makeText(getActivity(), "will open settings", Toast.LENGTH_SHORT).show();
                 Intent i = SettingsActivity.newIntent(getActivity());
                 startActivity(i);
+                return true;
             case R.id.menu_item_about:
-                Intent i = AboutActivity.newIntent(getActivity());
-                startActivity(i);
+                Intent a = new Intent(getActivity(), AboutActivity.class);
+                startActivity(a);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

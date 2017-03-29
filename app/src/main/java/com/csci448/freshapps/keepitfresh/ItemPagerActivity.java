@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Nate on 2/27/2017.
@@ -22,7 +21,7 @@ public class ItemPagerActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private List<Item> mItems;
 
-    public static Intent newIntent(Context context, UUID itemId) {
+    public static Intent newIntent(Context context, long itemId) {
         Intent intent = new Intent(context, ItemPagerActivity.class);
         intent.putExtra(EXTRA_ITEM_ID, itemId);
         return intent;
@@ -33,7 +32,7 @@ public class ItemPagerActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_item_pager);
 
-        UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
+        long itemId = getIntent().getLongExtra(EXTRA_ITEM_ID, 0);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_item_pager_view_pager);
 

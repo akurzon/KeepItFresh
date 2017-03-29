@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 public class StoredItems {
     private static StoredItems sStoredItems;
     private List<Item> mItemList;
     private List<Item> mShoppingList;
+    private List<Item> mHistoryList;
 
     public static StoredItems getInstance() {
         if (sStoredItems == null) {
@@ -19,91 +19,163 @@ public class StoredItems {
     }
 
     private StoredItems() {
+        pullListsFromDb();
+    }
+
+    private void pullListsFromDb() {
+        List<Item> mHistoryList = Item.listAll(Item.class);
         mItemList = new ArrayList<>();
-        // TODO: 2/26/17 remove this shit
-        for (int i = 0; i < 10; ++i) {
-            mItemList.add(new Item("item: " + i));
+        mShoppingList = new ArrayList<>();
+
+        for (Item item : mHistoryList) {
+            if (item.isOnShoppingList()) {
+                mShoppingList.add(item);
+            }
+            if (item.getQuantity() > 0) {
+                mItemList.add(item);
+            }
         }
     }
 
     public List<Item> getItemList() {
+        pullListsFromDb();
         return mItemList;
     }
 
     public List<Item> getShoppingList() {
+        pullListsFromDb();
         return mShoppingList;
     }
 
+    public List<Item> getHistoryList() {
+        pullListsFromDb();
+        return mHistoryList;
+    }
+
     public void addItemToItemList(Item i) {
+        i.save();
         mItemList.add(i);
     }
 
     public void addItemToShoppingList(Item i) {
+        i.save();
         mShoppingList.add(i);
     }
 
-    public Item getItem(UUID id) {
-        for (Item item : mItemList) {
-            if (item.getId().equals(id)) {
-                return item;
-            }
-        }
-        for (Item item : mShoppingList) {
-            if (item.getId().equals(id)) {
-                return item;
-            }
-        }
-        return null;
+    public Item getItem(long id) {
+        return Item.findById(Item.class, id);
+//        for (Item item : mItemList) {
+//            if (item.getId().equals(id)) {
+//                return item;
+//            }
+//        }
+//        for (Item item : mShoppingList) {
+//            if (item.getId().equals(id)) {
+//                return item;
+//            }
+//        }
+//        return null;
     }
 
     public List<Item> sortByName(ItemType type) {
-        List<Item> sortedList;
-        if (type.equals(ItemType.STORED)) {
-            sortedList = new ArrayList<>(mItemList);
+        String orderBy = "name";
+        String whereClause;
+        String whereArgs;
+
+        if (type.equals(ItemType.CART)) {
+            whereClause = "onShoppingList = ?";
+            whereArgs = "true";
         }
         else {
-            sortedList = new ArrayList<>(mShoppingList);
+            whereClause = "quantity > ?";
+            whereArgs = "0";
         }
-        Collections.sort(sortedList, new Comparator<Item>() {
-            @Override
-            public int compare(Item item1, Item item2) {
-                return item1.getName().compareTo(item2.getName());
-            }
-        });
-        return sortedList;
+
+        return Item.find(Item.class, whereClause, whereArgs, null, orderBy, null);
+//
+//        List<Item> sortedList;
+//        if (type.equals(ItemType.STORED)) {
+//            sortedList = new ArrayList<>(mItemList);
+//        }
+//        else {
+//            sortedList = new ArrayList<>(mShoppingList);
+//        }
+//        Collections.sort(sortedList, new Comparator<Item>() {
+//            @Override
+//            public int compare(Item item1, Item item2) {
+//                return item1.getName().compareTo(item2.getName());
+//            }
+//        });
+//        return sortedList;
     }
 
     public List<Item> sortByExpirationDate(ItemType type) {
-        List<Item> sortedList;
-        if (type.equals(ItemType.STORED)) {
-            sortedList = new ArrayList<>(mItemList);
+
+        String orderBy = "expirationDate";
+        String whereClause;
+        String whereArgs;
+
+        if (type.equals(ItemType.CART)) {
+            whereClause = "where onShoppingList = ?";
+            whereArgs = "true";
         }
         else {
-            sortedList = new ArrayList<>(mShoppingList);
+            whereClause = "where quantity > ?";
+            whereArgs = "0";
         }
-        Collections.sort(sortedList, new Comparator<Item>() {
-            @Override
-            public int compare(Item item1, Item item2) {
-                return item1.getExpirationDate().compareTo(item2.getExpirationDate());
-            }
-        });
-        return sortedList;
+
+        return Item.findWithQuery(Item.class,
+                "select * from Item " + whereClause + "order by ?", whereArgs, orderBy);
+
+//        return Item.find(Item.class, whereClause, whereArgs, null, orderBy, null);
+
+//        List<Item> sortedList;
+//        if (type.equals(ItemType.STORED)) {
+//            sortedList = new ArrayList<>(mItemList);
+//        }
+//        else {
+//            sortedList = new ArrayList<>(mShoppingList);
+//        }
+//        Collections.sort(sortedList, new Comparator<Item>() {
+//            @Override
+//            public int compare(Item item1, Item item2) {
+//                return item1.getExpirationDate().compareTo(item2.getExpirationDate());
+//            }
+//        });
+//        return sortedList;
     }
 
     public List<Item> sortByPurchaseDate(ItemType type) {
-        List<Item> sortedList;
-        if (type.equals(ItemType.STORED)) {
-            sortedList = new ArrayList<>(mItemList);
+
+        String orderBy = "purchaseDate";
+        String whereClause;
+        String whereArgs;
+
+        if (type.equals(ItemType.CART)) {
+            whereClause = "where onShoppingList = ?";
+            whereArgs = "true";
         }
         else {
-            sortedList = new ArrayList<>(mShoppingList);
+            whereClause = "where quantity > ?";
+            whereArgs = "0";
         }
-        Collections.sort(sortedList, new Comparator<Item>() {
-            @Override
-            public int compare(Item item1, Item item2) {
-                return item1.getPurchaseDate().compareTo(item2.getPurchaseDate());
-            }
-        });
-        return sortedList;
+
+        return Item.findWithQuery(Item.class,
+                "select * from Item " + whereClause + "order by ?", whereArgs, orderBy);
+//        return Item.find(Item.class, whereClause, whereArgs, null, orderBy, null);
+//        List<Item> sortedList;
+//        if (type.equals(ItemType.STORED)) {
+//            sortedList = new ArrayList<>(mItemList);
+//        }
+//        else {
+//            sortedList = new ArrayList<>(mShoppingList);
+//        }
+//        Collections.sort(sortedList, new Comparator<Item>() {
+//            @Override
+//            public int compare(Item item1, Item item2) {
+//                return item1.getPurchaseDate().compareTo(item2.getPurchaseDate());
+//            }
+//        });
+//        return sortedList;
     }
 }

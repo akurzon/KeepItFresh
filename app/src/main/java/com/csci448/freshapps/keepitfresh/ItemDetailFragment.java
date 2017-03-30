@@ -14,9 +14,8 @@ public class ItemDetailFragment extends Fragment {
 
     private static final String ITEM_ID = "item_id";
 
-    private TextView mTitle;
-    private Button mExpireDate, mPurchaseDate;
-    private CheckBox mEditCheckBox;
+    private TextView mTitle, mExpireDate, mPurchaseDate, mLocation, mQuantity;
+    private Button mEditButton;
 
     private Item mItem;
 
@@ -41,15 +40,26 @@ public class ItemDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         mTitle = (TextView) v.findViewById(R.id.item_title);
-        mExpireDate = (Button) v.findViewById(R.id.item_expire_date_button);
-        mPurchaseDate = (Button) v.findViewById(R.id.item_purchase_date_button);
-        mEditCheckBox = (CheckBox) v.findViewById(R.id.item_detail_editable_checkbox);
+        mExpireDate = (TextView) v.findViewById(R.id.item_expire_date_button);
+        mPurchaseDate = (TextView) v.findViewById(R.id.item_purchase_date_button);
+        mLocation = (TextView) v.findViewById(R.id.item_location_text);
+        mQuantity = (TextView) v.findViewById(R.id.item_quantity_text);
 
         mTitle.setText(mItem.getName());
         // TODO: 3/2/17 get better date formatting
         // TODO: 3/2/17 change to string resource with insert formatting
-        mExpireDate.setText("exp: " + mItem.getExpirationDate().toString());
-        mPurchaseDate.setText("pur: " + mItem.getPurchaseDate().toString());
+        mExpireDate.setText(mItem.getExpirationDate().toString());
+        mPurchaseDate.setText(mItem.getPurchaseDate().toString());
+        mLocation.setText(mItem.getLocation());
+        mQuantity.setText(mItem.getQuantity());
+
+        mEditButton = (Button) v.findViewById(R.id.item_detail_edit_button);
+        mEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: 3/29/17 Make a new activity for an edit
+            }
+        });
 
         return v;
     }

@@ -24,17 +24,23 @@ public class ItemEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle bunduru) {
         super.onCreate(bunduru);
-        long itemId = bunduru.getLong(ITEM_ID);
+        long itemId = getIntent().getLongExtra(ITEM_ID, -1);
+        setContentView(R.layout.fragment_edit_item);
         mItem = StoredItems.getInstance().getItem(itemId);
 
         mTitle = (EditText) findViewById(R.id.edit_item_title);
         mLocation = (EditText) findViewById(R.id.edit_item_location);
         mQuantity = (EditText) findViewById(R.id.edit_item_quantity);
 
+        // TODO: 3/31/17 YO DAWG add greyed out instruction text to the textbox for title if it's empty
         mTitle.setText(mItem.getName());
-        mLocation.setText(mItem.getLocation());
-        mQuantity.setText(mItem.getQuantity());
+        // TODO: 3/31/17 fix to use table converting int to category name as string
+        // TODO: 3/31/17 also make location a dropdown
+        // TODO: 3/31/17 setup database to have info about the uhhh categories
+        mLocation.setText(String.valueOf(mItem.getLocation()));
+        mQuantity.setText(String.valueOf(mItem.getQuantity()));
 
+        // TODO: 3/31/17 change to text boxes that open new activities which hold the date picker on click
         mExpireDate = (DatePicker) findViewById(R.id.edit_item_expiration_date);
         mPurchaseDate = (DatePicker) findViewById(R.id.edit_item_purchase_date);
 
@@ -50,6 +56,9 @@ public class ItemEditActivity extends AppCompatActivity {
                 //do expire and purchase dates
                 mItem.setExpirationDate(getDateFromDatePicker(mExpireDate));
                 mItem.setPurchaseDate(getDateFromDatePicker(mPurchaseDate));
+                StoredItems.getInstance().updateItem(mItem);
+                // TODO: 3/31/17 exit once saved to pager view for this item
+                onBackPressed();
             }
         });
         //TODO: 3/29/17 onclicklistener to save the item data to database, close activity

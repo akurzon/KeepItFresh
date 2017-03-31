@@ -40,8 +40,8 @@ public class ItemDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         mTitle = (TextView) v.findViewById(R.id.item_title);
-        mExpireDate = (TextView) v.findViewById(R.id.item_expire_date_button);
-        mPurchaseDate = (TextView) v.findViewById(R.id.item_purchase_date_button);
+        mExpireDate = (TextView) v.findViewById(R.id.item_expire_date_text);
+        mPurchaseDate = (TextView) v.findViewById(R.id.item_purchase_date_text);
         mLocation = (TextView) v.findViewById(R.id.item_location_text);
         mQuantity = (TextView) v.findViewById(R.id.item_quantity_text);
 

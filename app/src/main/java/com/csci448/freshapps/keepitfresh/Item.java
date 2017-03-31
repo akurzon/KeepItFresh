@@ -49,21 +49,21 @@ public class Item extends SugarRecord {
 
 
     public Item() {
-        name = "";
-        // TODO: 3/31/17 check settings for what user wants as a default expiration date?
-        expirationDate = new Date();
-        purchaseDate = new Date();
+        this("");
     }
 
     /**
-     * testing constructor generates a random expire date and purchase date
+     * constructor will set default values for everything other than name
      * @param name is the item name
      */
     public Item(String name) {
         this.name = name;
-        expirationDate = generateRandomDate(2017, 2018);
-        purchaseDate = generateRandomDate(2015, 2016);
-//        mId = UUID.randomUUID();
+        expirationDate = new Date();
+        purchaseDate = new Date();
+        quantity = 0;
+        location = 0;
+        onShoppingList = false;
+        isChecked = false;
     }
 
     /**

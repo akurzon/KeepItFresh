@@ -1,8 +1,6 @@
 package com.csci448.freshapps.keepitfresh;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class StoredItems {
@@ -126,23 +124,6 @@ public class StoredItems {
 
         return Item.findWithQuery(Item.class,
                 "select * from Item " + whereClause + "order by ?", whereArgs, orderBy);
-
-//        return Item.find(Item.class, whereClause, whereArgs, null, orderBy, null);
-
-//        List<Item> sortedList;
-//        if (type.equals(ItemType.STORED)) {
-//            sortedList = new ArrayList<>(mItemList);
-//        }
-//        else {
-//            sortedList = new ArrayList<>(mShoppingList);
-//        }
-//        Collections.sort(sortedList, new Comparator<Item>() {
-//            @Override
-//            public int compare(Item item1, Item item2) {
-//                return item1.getExpirationDate().compareTo(item2.getExpirationDate());
-//            }
-//        });
-//        return sortedList;
     }
 
     public List<Item> sortByPurchaseDate(ItemType type) {
@@ -162,20 +143,15 @@ public class StoredItems {
 
         return Item.findWithQuery(Item.class,
                 "select * from Item " + whereClause + "order by ?", whereArgs, orderBy);
-//        return Item.find(Item.class, whereClause, whereArgs, null, orderBy, null);
-//        List<Item> sortedList;
-//        if (type.equals(ItemType.STORED)) {
-//            sortedList = new ArrayList<>(mItemList);
-//        }
-//        else {
-//            sortedList = new ArrayList<>(mShoppingList);
-//        }
-//        Collections.sort(sortedList, new Comparator<Item>() {
-//            @Override
-//            public int compare(Item item1, Item item2) {
-//                return item1.getPurchaseDate().compareTo(item2.getPurchaseDate());
-//            }
-//        });
-//        return sortedList;
+    }
+
+    public void updateItem(Item i) {
+        i.save();
+    }
+
+    public void updateList(List<Item> list) {
+        for (Item item : list) {
+            item.save();
+        }
     }
 }

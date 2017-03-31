@@ -72,6 +72,11 @@ public class ItemListFragment extends Fragment {
         switch ((item.getItemId())) {
             case R.id.menu_item_new_item:
                 Toast.makeText(getActivity(), "Added a new item", Toast.LENGTH_SHORT).show();
+                Intent newItemIntent = new Intent(getActivity(), ItemEditActivity.class);
+                Item newItem = new Item();
+                newItem.save();
+                newItemIntent.putExtra(ItemEditActivity.ITEM_ID, newItem.getId());
+                startActivity(newItemIntent);
                 return true;
             case R.id.menu_item_sort_by:
                 Toast.makeText(getActivity(), "will filter", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,7 @@
 package com.csci448.freshapps.keepitfresh;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -46,6 +47,13 @@ public class Item extends SugarRecord {
         isChecked = checked;
     }
 
+
+    public Item() {
+        name = "";
+        // TODO: 3/31/17 check settings for what user wants as a default expiration date?
+        expirationDate = new Date();
+        purchaseDate = new Date();
+    }
 
     /**
      * testing constructor generates a random expire date and purchase date

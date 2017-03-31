@@ -36,6 +36,7 @@ public class ItemPagerActivity extends AppCompatActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.activity_item_pager_view_pager);
 
+        // TODO: 3/31/17 check the bundle for sort information, and get the properly sorted list
         mItems = StoredItems.getInstance().getItemList();
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {

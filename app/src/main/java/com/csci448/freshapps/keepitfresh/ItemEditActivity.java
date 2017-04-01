@@ -32,7 +32,6 @@ public class ItemEditActivity extends AppCompatActivity {
         mLocation = (EditText) findViewById(R.id.edit_item_location);
         mQuantity = (EditText) findViewById(R.id.edit_item_quantity);
 
-        // TODO: 3/31/17 YO DAWG add greyed out instruction text to the textbox for title if it's empty
         mTitle.setText(mItem.getName());
         // TODO: 3/31/17 fix to use table converting int to category name as string
         // TODO: 3/31/17 also make location a dropdown

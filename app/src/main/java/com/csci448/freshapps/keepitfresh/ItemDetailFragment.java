@@ -38,7 +38,7 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
-
+/*
         mTitle = (TextView) v.findViewById(R.id.item_title);
         mExpireDate = (TextView) v.findViewById(R.id.item_expire_date_text);
         mPurchaseDate = (TextView) v.findViewById(R.id.item_purchase_date_text);
@@ -60,7 +60,7 @@ public class ItemDetailFragment extends Fragment {
                 //TODO: 3/29/17 Make a new activity for an edit
             }
         });
-
+*/
         return v;
     }
 }

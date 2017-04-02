@@ -1,76 +1,142 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
-public class ItemEditActivity extends AppCompatActivity {
+public class ItemEditActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String ITEM_ID = "item_id";
 
-    private EditText mTitle, mLocation, mQuantity;
-    private DatePicker mExpireDate, mPurchaseDate;
+    private EditText mTitle, mQuantity;
+    private Spinner mLocation;
+    private Date mExpireDate, mPurchaseDate;
+    private TextView mExpireDateTextView, mPurchaseDateTextView;
     private Button mSaveButton;
-
+    private DatePickerDialog mExpireDatePickerDialog, mPurchaseDatePickerDialog;
+    private SimpleDateFormat mDateFormat;
     private Item mItem;
 
     @Override
     protected void onCreate(Bundle bunduru) {
         super.onCreate(bunduru);
         long itemId = getIntent().getLongExtra(ITEM_ID, -1);
-        setContentView(R.layout.fragment_edit_item);
         mItem = StoredItems.getInstance().getItem(itemId);
+        setContentView(R.layout.activity_edit_item);
+        findViewsById();
 
-        mTitle = (EditText) findViewById(R.id.edit_item_title);
-        mLocation = (EditText) findViewById(R.id.edit_item_location);
-        mQuantity = (EditText) findViewById(R.id.edit_item_quantity);
 
         mTitle.setText(mItem.getName());
-        // TODO: 3/31/17 fix to use table converting int to category name as string
-        // TODO: 3/31/17 also make location a dropdown
-        // TODO: 3/31/17 setup database to have info about the uhhh categories
-        mLocation.setText(String.valueOf(mItem.getLocation()));
         mQuantity.setText(String.valueOf(mItem.getQuantity()));
 
-        // TODO: 3/31/17 change to text boxes that open new activities which hold the date picker on click
-        mExpireDate = (DatePicker) findViewById(R.id.edit_item_expiration_date);
-        mPurchaseDate = (DatePicker) findViewById(R.id.edit_item_purchase_date);
+        mDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        setupDatePickerDialogues();
 
+        setupLocationSpinner();
+        setupSaveButton();
+
+        mExpireDateTextView.setOnClickListener(this);
+        mPurchaseDateTextView.setOnClickListener(this);
+
+        //TODO: 3/29/17 onclicklistener to save the item data to database, close activity
+    }
+
+    private void findViewsById() {
+        mTitle = (EditText) findViewById(R.id.edit_item_title);
+        mQuantity = (EditText) findViewById(R.id.edit_item_quantity);
+        mExpireDateTextView = (TextView) findViewById(R.id.expiration_date_text_view);
+        mPurchaseDateTextView = (TextView) findViewById(R.id.expiration_date_text_view);
+    }
+
+    private void setupDatePickerDialogues() {
+        Calendar calendar = Calendar.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mExpireDatePickerDialog = new DatePickerDialog(
+                    this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year, month, dayOfMonth);
+                    mExpireDateTextView.setText(mDateFormat.format(newDate.getTime()));
+                }
+            },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH));
+
+            mPurchaseDatePickerDialog = new DatePickerDialog(
+                    this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year, month, dayOfMonth);
+                    mPurchaseDateTextView.setText(mDateFormat.format(newDate.getTime()));
+                }
+            },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH));
+        }
+    }
+
+    private void setupSaveButton() {
         mSaveButton = (Button) findViewById(R.id.item_save_button);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mItem.setName(mTitle.getText().toString());
-                //location is an int, must find a way to set to int
-                //mItem.setLocation(mLocation.getText().toInt());
                 //quantity is an int
-                mItem.setQuantity(Integer.parseInt(mLocation.getText().toString()));
+                mItem.setQuantity(Integer.parseInt(mQuantity.getText().toString()));
                 //do expire and purchase dates
-                mItem.setExpirationDate(getDateFromDatePicker(mExpireDate));
-                mItem.setPurchaseDate(getDateFromDatePicker(mPurchaseDate));
+                // TODO: 3/31/17 fix this after you get info from actual datepicker (there should only be one)
+//                mItem.setExpirationDate(mExpireDate);
+//                mItem.setPurchaseDate(mPurchaseDate);
                 StoredItems.getInstance().updateItem(mItem);
                 // TODO: 3/31/17 exit once saved to pager view for this item
+                // TODO: 4/1/17
+
                 onBackPressed();
             }
         });
-        //TODO: 3/29/17 onclicklistener to save the item data to database, close activity
     }
 
-    private Date getDateFromDatePicker(DatePicker picker) {
-        Calendar c = Calendar.getInstance();
-        c.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
-
-        return c.getTime();
+    private void setupLocationSpinner() {
+        mLocation = (Spinner) findViewById(R.id.item_location_spinner);
+        ArrayAdapter<String> locationArray = new ArrayAdapter<>(
+                this,
+                R.layout.support_simple_spinner_dropdown_item,
+                Location.getLocationsAsStrings());
+        mLocation.setAdapter(locationArray);
     }
 
+//    private Date getDateFromDatePicker(DatePicker picker) {
+//        Calendar c = Calendar.getInstance();
+//        c.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
+//
+//        return c.getTime();
+//    }
 
+    @Override
+    public void onClick(View v) {
+        if(v == mExpireDateTextView) {
+            mExpireDatePickerDialog.show();
+        } else if(v == mPurchaseDateTextView) {
+            mPurchaseDatePickerDialog.show();
+        }
+    }
 
 //    @Override
 //    protected Fragment createFragment() {

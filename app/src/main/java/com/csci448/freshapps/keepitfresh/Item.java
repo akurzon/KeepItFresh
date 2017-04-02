@@ -1,18 +1,16 @@
 package com.csci448.freshapps.keepitfresh;
 
 import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
 
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class Item extends SugarRecord {
-//    private UUID mId;
     private String name;
     private Date expirationDate, purchaseDate;
     private int quantity;
-    private int location;
+    private Location location;
     private boolean onShoppingList, isChecked;
 
     public int getQuantity() {
@@ -23,11 +21,11 @@ public class Item extends SugarRecord {
         this.quantity = quantity;
     }
 
-    public int getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(int location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -61,7 +59,7 @@ public class Item extends SugarRecord {
         expirationDate = new Date();
         purchaseDate = new Date();
         quantity = 0;
-        location = 0;
+        location = null;
         onShoppingList = false;
         isChecked = false;
     }

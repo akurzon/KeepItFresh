@@ -17,6 +17,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <!--maybe get rid of these in favor of just displaying dates and assuming user will
+            click to change-->
         <TextView
             android:id="@+id/edit_expiration_date_header"
             android:layout_width="wrap_content"
@@ -24,11 +26,14 @@
             android:text="@string/expiration_set"
             android:textStyle="bold"/>
 
-        <DatePicker
-            android:id="@+id/edit_item_expiration_date"
+        <TextView
+            android:id="@+id/expiration_date_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="95dp"/>
-
+            android:layout_height="wrap_content"/>
+        <!--<DatePicker-->
+            <!--android:id="@+id/edit_item_expiration_date"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="95dp"/>-->
     </LinearLayout>
 
     <LinearLayout
@@ -36,6 +41,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <!--maybe get rid of these in favor of just displaying dates and assuming user will
+            click to change-->
         <TextView
             android:id="@+id/edit_purchase_date_header"
             android:layout_width="wrap_content"
@@ -43,10 +50,14 @@
             android:text="@string/purchase_set"
             android:textStyle="bold"/>
 
-        <DatePicker
-            android:id="@+id/edit_item_purchase_date"
+        <TextView
+            android:id="@+id/purchase_date_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="95dp"/>
+            android:layout_height="wrap_content"/>
+        <!--<DatePicker-->
+            <!--android:id="@+id/edit_item_purchase_date"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="95dp"/>-->
 
     </LinearLayout>
 
@@ -82,10 +93,15 @@
             android:text="@string/location_set"
             android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/edit_item_location"
+        <Spinner
+            android:id="@+id/item_location_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <!--<EditText-->
+            <!--android:id="@+id/edit_item_location"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
 
     </LinearLayout>
 

@@ -13,7 +13,22 @@ public class StoredItems {
         if (sStoredItems == null) {
             sStoredItems = new StoredItems();
         }
-         return sStoredItems;
+
+        // didn't know where better to put this, maybe put in subclass of Application
+        // (actually subclass of the sugar orm class which operates in place of Application
+        // if no locations have populated the db yet, create the default three
+        if (Location.count(Location.class) == 0) {
+
+            Location fridge = new Location("fridge");
+            Location pantry = new Location("pantry");
+            Location freezer = new Location("freezer");
+
+            fridge.save();
+            pantry.save();
+            freezer.save();
+        }
+
+        return sStoredItems;
     }
 
     private StoredItems() {
@@ -21,7 +36,7 @@ public class StoredItems {
     }
 
     private void pullListsFromDb() {
-        List<Item> mHistoryList = Item.listAll(Item.class);
+        mHistoryList = Item.listAll(Item.class);
         mItemList = new ArrayList<>();
         mShoppingList = new ArrayList<>();
 

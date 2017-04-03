@@ -1,44 +1,56 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.csci448.freshapps.keepitfresh.database.ItemCursorWrapper;
+import com.csci448.freshapps.keepitfresh.database.ItemDbHelper;
+import com.csci448.freshapps.keepitfresh.database.ItemDbSchema;
+import com.csci448.freshapps.keepitfresh.database.LocationCursorWrapper;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class StoredItems {
     private static StoredItems sStoredItems;
     private List<Item> mItemList;
     private List<Item> mShoppingList;
     private List<Item> mHistoryList;
+    private List<String> mLocations;
+    private SQLiteDatabase mDatabase;
+    private Context mContext;
 
-    public static StoredItems getInstance() {
+    public static StoredItems getInstance(Context context) {
         if (sStoredItems == null) {
-            sStoredItems = new StoredItems();
+            sStoredItems = new StoredItems(context);
         }
-
-        // didn't know where better to put this, maybe put in subclass of Application
-        // (actually subclass of the sugar orm class which operates in place of Application
-        // if no locations have populated the db yet, create the default three
-        if (Location.count(Location.class) == 0) {
-
-            Location fridge = new Location("fridge");
-            Location pantry = new Location("pantry");
-            Location freezer = new Location("freezer");
-
-            fridge.save();
-            pantry.save();
-            freezer.save();
-        }
-
         return sStoredItems;
     }
 
-    private StoredItems() {
+    private StoredItems(Context context) {
+        mContext = context.getApplicationContext();
+        mDatabase = new ItemDbHelper(mContext).getWritableDatabase();
         pullListsFromDb();
+
     }
 
     private void pullListsFromDb() {
-        mHistoryList = Item.listAll(Item.class);
+
+        mHistoryList = new ArrayList<>();
         mItemList = new ArrayList<>();
         mShoppingList = new ArrayList<>();
+        mLocations = new ArrayList<>();
+
+        ItemCursorWrapper itemCursor = queryItems(null, null);
+        itemCursor.moveToFirst();
+        while(!itemCursor.isAfterLast()) {
+            mHistoryList.add(itemCursor.getItem());
+            itemCursor.moveToNext();
+        }
+        itemCursor.close();
 
         for (Item item : mHistoryList) {
             if (item.isOnShoppingList()) {
@@ -48,6 +60,82 @@ public class StoredItems {
                 mItemList.add(item);
             }
         }
+
+        LocationCursorWrapper locationCursor = queryLocations(null, null);
+        locationCursor.moveToFirst();
+        while(!locationCursor.isAfterLast()) {
+            mLocations.add(locationCursor.getLocation());
+            itemCursor.moveToNext();
+        }
+        itemCursor.close();
+
+        if (mLocations.size() == 0) {
+            String fridge = "fridge";
+            String pantry = "pantry";
+            String freezer = "freezer";
+
+            mLocations.add(fridge);
+            mLocations.add(pantry);
+            mLocations.add(freezer);
+
+            for (String location : mLocations) {
+                addLocation(location);
+            }
+        }
+    }
+
+    public void addLocation(String location) {
+        ContentValues values = new ContentValues();
+        values.put(ItemDbSchema.LocationTable.Cols.NAME, location);
+        mDatabase.insert(ItemDbSchema.LocationTable.NAME, null, values);
+    }
+
+    private LocationCursorWrapper queryLocations(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                ItemDbSchema.LocationTable.NAME,
+                null, // Columns - null selects all columns
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                null // orderBy
+        );
+
+        return new LocationCursorWrapper(cursor);
+    }
+
+    private ItemCursorWrapper queryItems(String whereClause, String[] whereArgs) {
+
+        Cursor cursor = mDatabase.query(
+                ItemDbSchema.ItemTable.NAME,
+                null, // Columns - null selects all columns
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                null // orderBy
+        );
+
+        return new ItemCursorWrapper(cursor);
+    }
+
+    private static ContentValues getContentValues(Item item) {
+        ContentValues values = new ContentValues();
+        values.put(ItemDbSchema.ItemTable.Cols.UUID, item.getId().toString());
+        values.put(ItemDbSchema.ItemTable.Cols.NAME, item.getName());
+        values.put(ItemDbSchema.ItemTable.Cols.EXPIRE, item.getExpirationDate().toString());
+        values.put(ItemDbSchema.ItemTable.Cols.PURCHASE, item.getPurchaseDate().toString());
+        values.put(ItemDbSchema.ItemTable.Cols.LOCATION, item.getLocation());
+        values.put(ItemDbSchema.ItemTable.Cols.QUANTITY, item.getQuantity());
+        values.put(ItemDbSchema.ItemTable.Cols.ON_SHOPPING, item.isOnShoppingList() ? 1 : 0);
+        values.put(ItemDbSchema.ItemTable.Cols.IS_CHECKED, item.isChecked() ? 1 : 0);
+
+        return values;
+    }
+
+    public List<String> getLocations() {
+        pullListsFromDb();
+        return mLocations;
     }
 
     public List<Item> getItemList() {
@@ -66,107 +154,127 @@ public class StoredItems {
     }
 
     public void addItemToItemList(Item i) {
-        i.save();
+
+
+        // TODO: 4/2/2017 replace
+
         mItemList.add(i);
     }
 
     public void addItemToShoppingList(Item i) {
-        i.save();
+        // TODO: 4/2/2017 replace
+
         mShoppingList.add(i);
     }
 
-    public Item getItem(long id) {
-        return Item.findById(Item.class, id);
-//        for (Item item : mItemList) {
-//            if (item.getId().equals(id)) {
-//                return item;
-//            }
-//        }
-//        for (Item item : mShoppingList) {
-//            if (item.getId().equals(id)) {
-//                return item;
-//            }
-//        }
-//        return null;
+    public Item getItem(UUID id) {
+        ItemCursorWrapper cursor = queryItems(
+                ItemDbSchema.ItemTable.Cols.UUID + " = ?",
+                new String[] {id.toString()}
+        );
+
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+
+            cursor.moveToFirst();
+            return cursor.getItem();
+
+        } finally {
+            cursor.close();
+        }
     }
 
-    public List<Item> sortByName(ItemType type) {
-        String orderBy = "name";
+    public void addItem(Item item) {
+        ContentValues values = getContentValues(item);
+        mDatabase.insert(ItemDbSchema.ItemTable.NAME, null, values);
+    }
+
+    public void deleteItem(Item item) {
+        String uuidString = item.getId().toString();
+        mDatabase.delete(
+                ItemDbSchema.ItemTable.NAME,
+                ItemDbSchema.ItemTable.Cols.UUID + " = ?",
+                new String[] {uuidString}
+        );
+    }
+
+    public void updateItem(Item item) {
+        String uuidString = item.getId().toString();
+        ContentValues values = getContentValues(item);
+        String whereClause = ItemDbSchema.ItemTable.Cols.UUID + " = ?";
+        String[] whereArgs = new String[] {uuidString};
+        mDatabase.update(ItemDbSchema.ItemTable.NAME, values, whereClause, whereArgs);
+
+        getItem(item.getId()).update(item);
+    }
+
+    private ItemCursorWrapper querySortedItems(String whereClause, String[] whereArgs,
+                                               String sortCol) {
+        Cursor cursor = mDatabase.query(
+                ItemDbSchema.ItemTable.NAME,
+                null, // Columns - null selects all columns
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                sortCol // orderBy
+        );
+
+        return new ItemCursorWrapper(cursor);
+    }
+
+    private List<Item> sortBy(ItemType type, String sortCol) {
+        List<Item> sortedList = new ArrayList<>();
+        String orderBy = sortCol;
         String whereClause;
-        String whereArgs;
+        String[] whereArgs;
 
         if (type.equals(ItemType.CART)) {
             whereClause = "onShoppingList = ?";
-            whereArgs = "true";
+            whereArgs = new String[] {"1"};
         }
         else {
             whereClause = "quantity > ?";
-            whereArgs = "0";
+            whereArgs = new String[] {"0"};
         }
 
-        return Item.find(Item.class, whereClause, whereArgs, null, orderBy, null);
-//
-//        List<Item> sortedList;
-//        if (type.equals(ItemType.STORED)) {
-//            sortedList = new ArrayList<>(mItemList);
-//        }
-//        else {
-//            sortedList = new ArrayList<>(mShoppingList);
-//        }
-//        Collections.sort(sortedList, new Comparator<Item>() {
-//            @Override
-//            public int compare(Item item1, Item item2) {
-//                return item1.getName().compareTo(item2.getName());
-//            }
-//        });
-//        return sortedList;
+        ItemCursorWrapper cursor = querySortedItems(whereClause, whereArgs, orderBy);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            sortedList.add(cursor.getItem());
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return sortedList;
+    }
+
+    public List<Item> sortByName(ItemType type) {
+        return sortBy(type, "name");
     }
 
     public List<Item> sortByExpirationDate(ItemType type) {
-
-        String orderBy = "expirationDate";
-        String whereClause;
-        String whereArgs;
-
-        if (type.equals(ItemType.CART)) {
-            whereClause = "where onShoppingList = ?";
-            whereArgs = "true";
-        }
-        else {
-            whereClause = "where quantity > ?";
-            whereArgs = "0";
-        }
-
-        return Item.findWithQuery(Item.class,
-                "select * from Item " + whereClause + "order by ?", whereArgs, orderBy);
+        return sortBy(type, "expirationDate");
     }
 
     public List<Item> sortByPurchaseDate(ItemType type) {
-
-        String orderBy = "purchaseDate";
-        String whereClause;
-        String whereArgs;
-
-        if (type.equals(ItemType.CART)) {
-            whereClause = "where onShoppingList = ?";
-            whereArgs = "true";
-        }
-        else {
-            whereClause = "where quantity > ?";
-            whereArgs = "0";
-        }
-
-        return Item.findWithQuery(Item.class,
-                "select * from Item " + whereClause + "order by ?", whereArgs, orderBy);
+        return sortBy(type, "purchaseDate");
     }
 
-    public void updateItem(Item i) {
-        i.save();
+    public List<Item> getItemsFromLocation(String location) {
+        ItemCursorWrapper itemCursor = queryItems("location = ?", new String[] {location});
+
+        ArrayList<Item> items = new ArrayList<>();
+        itemCursor.moveToFirst();
+        while(!itemCursor.isAfterLast()) {
+            items.add(itemCursor.getItem());
+            itemCursor.moveToNext();
+        }
+        itemCursor.close();
+
+        return items;
     }
 
-    public void updateList(List<Item> list) {
-        for (Item item : list) {
-            item.save();
-        }
-    }
 }

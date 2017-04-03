@@ -1,48 +1,48 @@
 package com.csci448.freshapps.keepitfresh;
 
-import com.orm.SugarRecord;
-
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 
-public class Item extends SugarRecord {
-    private String name;
-    private Date expirationDate, purchaseDate;
-    private int quantity;
-    private Location location;
-    private boolean onShoppingList, isChecked;
+public class Item {
+    private UUID mId;
+    private String mName;
+    private Date mExpirationDate, mPurchaseDate;
+    private int mQuantity;
+    private String mLocation;
+    private boolean mOnShoppingList, mIsChecked;
 
     public int getQuantity() {
-        return quantity;
+        return mQuantity;
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.mQuantity = quantity;
     }
 
-    public Location getLocation() {
-        return location;
+    public String getLocation() {
+        return mLocation;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocation(String location) {
+        mLocation = location;
     }
 
     public boolean isOnShoppingList() {
-        return onShoppingList;
+        return mOnShoppingList;
     }
 
     public void setOnShoppingList(boolean onShoppingList) {
-        this.onShoppingList = onShoppingList;
+        this.mOnShoppingList = onShoppingList;
     }
 
     public boolean isChecked() {
-        return isChecked;
+        return mIsChecked;
     }
 
     public void setChecked(boolean checked) {
-        isChecked = checked;
+        mIsChecked = checked;
     }
 
 
@@ -50,60 +50,74 @@ public class Item extends SugarRecord {
         this("");
     }
 
+    public Item(UUID id) {
+        mId = id;
+
+    }
     /**
-     * constructor will set default values for everything other than name
-     * @param name is the item name
+     * constructor will set default values for everything other than mName
+     * @param name is the item mName
      */
     public Item(String name) {
-        this.name = name;
-        expirationDate = new Date();
-        purchaseDate = new Date();
-        quantity = 0;
-        location = null;
-        onShoppingList = false;
-        isChecked = false;
+        this.mName = name;
+        mExpirationDate = new Date();
+        mPurchaseDate = new Date();
+        mQuantity = 0;
+        mLocation = null;
+        mOnShoppingList = false;
+        mIsChecked = false;
     }
 
     /**
      * item constructor
-     * @param name is the item name
+     * @param name is the item mName
      * @param expirationDate is the item's expiry date
      * @param purchaseDate is the item's purchase date
      */
     public Item(String name, Date expirationDate, Date purchaseDate) {
-        this.name = name;
-        this.expirationDate = expirationDate;
-        this.purchaseDate = purchaseDate;
+        this.mName = name;
+        this.mExpirationDate = expirationDate;
+        this.mPurchaseDate = purchaseDate;
 //        mId = UUID.randomUUID();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+        this.mExpirationDate = expirationDate;
     }
 
     public void setPurchaseDate(Date purchaseDate) {
-        this.purchaseDate = purchaseDate;
+        this.mPurchaseDate = purchaseDate;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public Date getExpirationDate() {
-        return expirationDate;
+        return mExpirationDate;
     }
 
     public Date getPurchaseDate() {
-        return purchaseDate;
+        return mPurchaseDate;
     }
 
-//    public UUID getId() {
-//        return mId;
-//    }
+    public UUID getId() {
+        return mId;
+    }
+
+    public void update(Item item) {
+        this.mName = item.mName;
+        this.mExpirationDate = item.mExpirationDate;
+        this.mPurchaseDate = item.mPurchaseDate;
+        this.mQuantity = item.mQuantity;
+        this.mLocation = item.mLocation;
+        this.mOnShoppingList = item.mOnShoppingList;
+        this.mIsChecked = item.mIsChecked;
+    }
 
     private Date generateRandomDate(int startYear, int endYear) {
         Calendar calendar = Calendar.getInstance();

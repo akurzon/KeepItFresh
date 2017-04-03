@@ -1,6 +1,7 @@
 package com.csci448.freshapps.keepitfresh;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     private Spinner mLocation;
     private Date mExpireDate, mPurchaseDate;
     private TextView mExpireDateTextView, mPurchaseDateTextView;
+    private TextView mExpireDateHeader, mPurchaseDateHeader;
     private Button mSaveButton;
     private DatePickerDialog mExpireDatePickerDialog, mPurchaseDatePickerDialog;
     private SimpleDateFormat mDateFormat;
@@ -39,58 +41,87 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_edit_item);
         findViewsById();
 
-
         mTitle.setText(mItem.getName());
         mQuantity.setText(String.valueOf(mItem.getQuantity()));
 
-        mDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        mDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         setupDatePickerDialogues();
-
         setupLocationSpinner();
         setupSaveButton();
+        setupListeners();
+    }
 
+    private void setupListeners() {
+        //TODO: 3/29/17 onclicklistener to save the item data to database, close activity
         mExpireDateTextView.setOnClickListener(this);
         mPurchaseDateTextView.setOnClickListener(this);
+        mExpireDateHeader.setOnClickListener(this);
+        mPurchaseDateHeader.setOnClickListener(this);
 
-        //TODO: 3/29/17 onclicklistener to save the item data to database, close activity
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItem.setExpirationDate(mExpireDate);
+                mItem.setPurchaseDate(mPurchaseDate);
+                mItem.setQuantity(Integer.valueOf(mQuantity.getText().toString()));
+                mItem.setLocation(mLocation.getSelectedItem().toString());
+                // TODO: 4/3/17 set booleans for item
+
+                StoredItems.getInstance(getApplicationContext()).updateItem(mItem);
+                // TODO: 4/3/17 check for non-zero quantity
+
+                // TODO: 4/3/17 exit activity once item saved
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
     }
 
     private void findViewsById() {
         mTitle = (EditText) findViewById(R.id.edit_item_title);
         mQuantity = (EditText) findViewById(R.id.edit_item_quantity);
         mExpireDateTextView = (TextView) findViewById(R.id.expiration_date_text_view);
-        mPurchaseDateTextView = (TextView) findViewById(R.id.expiration_date_text_view);
+        mPurchaseDateTextView = (TextView) findViewById(R.id.purchase_date_text_view);
+        mExpireDateHeader = (TextView) findViewById(R.id.edit_expiration_date_header);
+        mPurchaseDateHeader = (TextView) findViewById(R.id.edit_purchase_date_header);
     }
 
     private void setupDatePickerDialogues() {
-        Calendar calendar = Calendar.getInstance();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mExpireDatePickerDialog = new DatePickerDialog(
-                    this, new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    Calendar newDate = Calendar.getInstance();
-                    newDate.set(year, month, dayOfMonth);
-                    mExpireDateTextView.setText(mDateFormat.format(newDate.getTime()));
-                }
-            },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH));
+        mPurchaseDate = mItem.getPurchaseDate();
+        mExpireDate = mItem.getExpirationDate();
+        mExpireDateTextView.setText(mDateFormat.format(mExpireDate));
+        mPurchaseDateTextView.setText(mDateFormat.format(mPurchaseDate));
 
-            mPurchaseDatePickerDialog = new DatePickerDialog(
-                    this, new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    Calendar newDate = Calendar.getInstance();
-                    newDate.set(year, month, dayOfMonth);
-                    mPurchaseDateTextView.setText(mDateFormat.format(newDate.getTime()));
-                }
-            },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH));
-        }
+        Calendar calendar = Calendar.getInstance();
+
+        mExpireDatePickerDialog = new DatePickerDialog(
+                this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, month, dayOfMonth);
+                mExpireDateTextView.setText(mDateFormat.format(newDate.getTime()));
+                mExpireDate = newDate.getTime();
+            }
+        },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+
+        mPurchaseDatePickerDialog = new DatePickerDialog(
+                this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, month, dayOfMonth);
+                mPurchaseDateTextView.setText(mDateFormat.format(newDate.getTime()));
+                mPurchaseDate = newDate.getTime();
+            }
+        },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
     }
 
     private void setupSaveButton() {
@@ -132,9 +163,10 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if(v == mExpireDateTextView) {
+
+        if (v == mExpireDateTextView || v == mExpireDateHeader) {
             mExpireDatePickerDialog.show();
-        } else if(v == mPurchaseDateTextView) {
+        } else if (v == mPurchaseDateTextView || v == mPurchaseDateHeader) {
             mPurchaseDatePickerDialog.show();
         }
     }

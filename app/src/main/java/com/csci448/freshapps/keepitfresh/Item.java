@@ -47,11 +47,25 @@ public class Item {
 
 
     public Item() {
-        this("");
+        mName = "";
+        mExpirationDate = new Date(System.currentTimeMillis());
+        mPurchaseDate = new Date(System.currentTimeMillis());
+        mQuantity = 0;
+        mLocation = null;
+        mOnShoppingList = false;
+        mIsChecked = false;
         mId = UUID.randomUUID();
     }
 
     public Item(UUID id) {
+//        this("");
+        mName = "";
+        mExpirationDate = new Date(System.currentTimeMillis());
+        mPurchaseDate = new Date(System.currentTimeMillis());
+        mQuantity = 0;
+        mLocation = null;
+        mOnShoppingList = false;
+        mIsChecked = false;
         mId = id;
 
     }
@@ -61,8 +75,8 @@ public class Item {
      */
     public Item(String name) {
         this.mName = name;
-        mExpirationDate = new Date();
-        mPurchaseDate = new Date();
+        mExpirationDate = new Date(System.currentTimeMillis());
+        mPurchaseDate = new Date(System.currentTimeMillis());
         mQuantity = 0;
         mLocation = null;
         mOnShoppingList = false;
@@ -79,7 +93,7 @@ public class Item {
         this.mName = name;
         this.mExpirationDate = expirationDate;
         this.mPurchaseDate = purchaseDate;
-//        mId = UUID.randomUUID();
+        mId = UUID.randomUUID();
     }
 
     public void setName(String name) {

@@ -24,10 +24,10 @@
     <string name="item_detail_editable_checkbox">Edit</string>
     <string name="location">Location</string>
     <string name="quantity">Quantity</string>
-    <string name="location_set">Set Location</string>
-    <string name="quantity_set">Set Quantity</string>
-    <string name="expiration_set">Set Expiration Date</string>
-    <string name="purchase_set">Set Purchase Date</string>
+    <string name="location_set">Set Location: </string>
+    <string name="quantity_set">Set Quantity: </string>
+    <string name="expiration_set">Set Expiration Date: </string>
+    <string name="purchase_set">Set Purchase Date: </string>
     <string name="save">Save</string>
     <string name="title_hint">Enter a name for the item.</string>
 </resources>

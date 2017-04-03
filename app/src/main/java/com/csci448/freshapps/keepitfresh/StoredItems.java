@@ -10,8 +10,10 @@ import com.csci448.freshapps.keepitfresh.database.ItemDbHelper;
 import com.csci448.freshapps.keepitfresh.database.ItemDbSchema;
 import com.csci448.freshapps.keepitfresh.database.LocationCursorWrapper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class StoredItems {
@@ -123,8 +125,8 @@ public class StoredItems {
         ContentValues values = new ContentValues();
         values.put(ItemDbSchema.ItemTable.Cols.UUID, item.getId().toString());
         values.put(ItemDbSchema.ItemTable.Cols.NAME, item.getName());
-        values.put(ItemDbSchema.ItemTable.Cols.EXPIRE, item.getExpirationDate().toString());
-        values.put(ItemDbSchema.ItemTable.Cols.PURCHASE, item.getPurchaseDate().toString());
+        values.put(ItemDbSchema.ItemTable.Cols.EXPIRE, item.getExpirationDate().getTime());
+        values.put(ItemDbSchema.ItemTable.Cols.PURCHASE, item.getPurchaseDate().getTime());
         values.put(ItemDbSchema.ItemTable.Cols.LOCATION, item.getLocation());
         values.put(ItemDbSchema.ItemTable.Cols.QUANTITY, item.getQuantity());
         values.put(ItemDbSchema.ItemTable.Cols.ON_SHOPPING, item.isOnShoppingList() ? 1 : 0);
@@ -231,13 +233,20 @@ public class StoredItems {
         String whereClause;
         String[] whereArgs;
 
+        // TODO: 4/3/17 figure out why using whereArgs breaks the query
         if (type.equals(ItemType.CART)) {
-            whereClause = "onShoppingList = ?";
-            whereArgs = new String[] {"1"};
+//            whereClause = "onShoppingList = ?";
+//            whereArgs = new String[] {"1"};
+            whereClause = "onShoppingList = 1";
+            whereArgs = null;
         }
         else {
-            whereClause = "quantity > ?";
-            whereArgs = new String[] {"0"};
+//            whereClause = "quantity > ?";
+//            whereArgs = new String[] {"0"};
+
+            whereClause = "quantity > 0";
+            whereArgs = null;
+
         }
 
         ItemCursorWrapper cursor = querySortedItems(whereClause, whereArgs, orderBy);

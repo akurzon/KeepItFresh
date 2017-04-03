@@ -36,16 +36,15 @@ public class ItemListFragment extends Fragment {
         }
 
         // TODO: 3/3/17 change from if else to switch case for handling requests
-//        switch (requestCode) {
-//            case REQUEST_OPTION:
-//                break;
-//            default:
-//                break;
-//        }
-        if (requestCode == REQUEST_OPTION) {
-            SortOptions option = (SortOptions)
-                    data.getSerializableExtra(SortOptionsDialogFragment.EXTRA_SORT_OPTION);
-            updateUI(option);
+        switch (requestCode) {
+            case REQUEST_OPTION:
+                SortOptions option = (SortOptions)
+                        data.getSerializableExtra(SortOptionsDialogFragment.EXTRA_SORT_OPTION);
+                updateUI(option);
+                break;
+            default:
+                updateUI();
+                break;
         }
     }
 

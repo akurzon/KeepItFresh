@@ -24,7 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/expiration_set"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:paddingEnd="16dp"/>
 
         <TextView
             android:id="@+id/expiration_date_text_view"
@@ -48,7 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/purchase_set"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:paddingEnd="16dp"/>
 
         <TextView
             android:id="@+id/purchase_date_text_view"
@@ -71,14 +73,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/quantity_set"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:paddingEnd="16dp"/>
 
         <EditText
             android:id="@+id/edit_item_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -97,11 +99,6 @@
             android:id="@+id/item_location_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-
-        <!--<EditText-->
-            <!--android:id="@+id/edit_item_location"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"/>-->
 
     </LinearLayout>
 

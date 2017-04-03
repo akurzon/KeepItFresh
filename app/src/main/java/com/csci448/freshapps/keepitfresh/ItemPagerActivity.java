@@ -60,5 +60,4 @@ public class ItemPagerActivity extends AppCompatActivity {
             }
         }
     }
-
 }

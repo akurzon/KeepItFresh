@@ -20,7 +20,7 @@ public class ItemListFragment extends Fragment {
 
     private static final int REQUEST_OPTION = 0;
     private static final String DIALOG_OPTION = "option";
-    private RecyclerView mCrimeRecyclerView;
+    private RecyclerView mRecyclerView;
     private ItemAdapter mItemAdapter;
 
     @Override
@@ -53,8 +53,8 @@ public class ItemListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View view = inflater.inflate(R.layout.fragment_items_list, container, false);
 
-        mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.items_list_recycler_view);
-        mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.items_list_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         
         updateUI();
 
@@ -77,6 +77,10 @@ public class ItemListFragment extends Fragment {
                 newItem.save();
                 newItemIntent.putExtra(ItemEditActivity.ITEM_ID, newItem.getId());
                 startActivity(newItemIntent);
+                return true;
+            case R.id.menu_item_shopping_list:
+                Intent shoppingIntent = new Intent(getActivity(), ShoppingListActivity.class);
+                startActivity(shoppingIntent);
                 return true;
             case R.id.menu_item_sort_by:
                 Toast.makeText(getActivity(), "will filter", Toast.LENGTH_SHORT).show();
@@ -117,7 +121,7 @@ public class ItemListFragment extends Fragment {
 
         if (mItemAdapter == null) {
             mItemAdapter = new ItemAdapter(items);
-            mCrimeRecyclerView.setAdapter(mItemAdapter);
+            mRecyclerView.setAdapter(mItemAdapter);
         }
         else {
             mItemAdapter.updateItems(items);
@@ -131,7 +135,7 @@ public class ItemListFragment extends Fragment {
 
         if (mItemAdapter == null) {
             mItemAdapter = new ItemAdapter(items);
-            mCrimeRecyclerView.setAdapter(mItemAdapter);
+            mRecyclerView.setAdapter(mItemAdapter);
         }
         else {
             mItemAdapter.updateItems(items);

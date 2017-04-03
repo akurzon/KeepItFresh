@@ -32,13 +32,15 @@ public class ShoppingListActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        // TODO: 4/1/17 Get list of items on the shopping list here, then set the adapter to include this list
-        //List<Item> items =
-        //mAdapter = new ListAdapter(items);
+        StoredItems storedItems = StoredItems.getInstance();
+        List<Item> items = storedItems.getShoppingList();
+        mAdapter = new ListAdapter(items);
         mShoppingRecyclerView.setAdapter(mAdapter);
     }
 
     private class ListHolder extends RecyclerView.ViewHolder {
+
+        private Item mItem;
 
         private TextView mName;
         private CheckBox mChecked;
@@ -48,6 +50,12 @@ public class ShoppingListActivity extends AppCompatActivity {
 
             mName = (TextView) findViewById(R.id.shopping_list_item_name);
             mChecked = (CheckBox) findViewById(R.id.shopping_list_item_checkbox);
+        }
+
+        public void bindItem(Item item) {
+            mItem = item;
+            mName.setText(mItem.getName());
+            mChecked.setChecked(mItem.isChecked());
         }
     }
 
@@ -61,15 +69,15 @@ public class ShoppingListActivity extends AppCompatActivity {
         @Override
         public ListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             //find context for shopping list activity
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(android.R.layout.list_item_shopping_list, parent, false);
+            LayoutInflater inflater = LayoutInflater.from(ShoppingListActivity.this);
+            View view = inflater.inflate(R.layout.list_item_shopping_list, parent, false);
             return new ListHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ListHolder holder, int position) {
             Item item = mItems.get(position);
-            holder.mName.setText(item.getName());
+            holder.bindItem(item);
         }
 
         @Override

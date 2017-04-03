@@ -32,7 +32,7 @@ public class ShoppingListActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        StoredItems storedItems = StoredItems.getInstance();
+        StoredItems storedItems = StoredItems.getInstance(this);
         List<Item> items = storedItems.getShoppingList();
         mAdapter = new ListAdapter(items);
         mShoppingRecyclerView.setAdapter(mAdapter);

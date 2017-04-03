@@ -48,6 +48,7 @@ public class Item {
 
     public Item() {
         this("");
+        mId = UUID.randomUUID();
     }
 
     public Item(UUID id) {

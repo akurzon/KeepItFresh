@@ -65,7 +65,7 @@ public class StoredItems {
         locationCursor.moveToFirst();
         while(!locationCursor.isAfterLast()) {
             mLocations.add(locationCursor.getLocation());
-            itemCursor.moveToNext();
+            locationCursor.moveToNext();
         }
         itemCursor.close();
 

@@ -41,7 +41,7 @@ public class ItemListActivity extends SingleFragmentActivity {
         mLocations[3] = "Pantry";
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mLocations);
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mLocations);
         mDrawerList.setAdapter(mAdapter);
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

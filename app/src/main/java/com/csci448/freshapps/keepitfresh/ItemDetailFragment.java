@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 
 public class ItemDetailFragment extends Fragment {
 
@@ -19,7 +21,7 @@ public class ItemDetailFragment extends Fragment {
 
     private Item mItem;
 
-    public static ItemDetailFragment newInstance(long itemId) {
+    public static ItemDetailFragment newInstance(UUID itemId) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ITEM_ID, itemId);
 
@@ -31,8 +33,8 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        long itemId = getArguments().getLong(ITEM_ID);
-        mItem = StoredItems.getInstance().getItem(itemId);
+        UUID itemId = (UUID) getArguments().getSerializable(ITEM_ID);
+        mItem = StoredItems.getInstance(getContext()).getItem(itemId);
     }
 
     @Override

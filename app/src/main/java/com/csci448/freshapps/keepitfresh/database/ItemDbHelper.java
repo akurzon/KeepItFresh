@@ -16,7 +16,7 @@ public class ItemDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + ItemDbSchema.ItemTable.NAME + "(" +
-            "_id integer primary key autoincrement" +
+            "_id integer primary key autoincrement, " +
                 ItemDbSchema.ItemTable.Cols.UUID + ", " +
                 ItemDbSchema.ItemTable.Cols.NAME + ", " +
                 ItemDbSchema.ItemTable.Cols.EXPIRE + ", " +
@@ -28,7 +28,7 @@ public class ItemDbHelper extends SQLiteOpenHelper {
         );
 
         db.execSQL("create table " + ItemDbSchema.LocationTable.NAME + "(" +
-                "_id integer primary key autoincrement" +
+                "_id integer primary key autoincrement, " +
                 ItemDbSchema.LocationTable.Cols.NAME + ")"
         );
     }

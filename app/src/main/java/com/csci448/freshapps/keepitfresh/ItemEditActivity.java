@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class ItemEditActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,8 +34,8 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle bunduru) {
         super.onCreate(bunduru);
-        long itemId = getIntent().getLongExtra(ITEM_ID, -1);
-        mItem = StoredItems.getInstance().getItem(itemId);
+        UUID itemId = (UUID) getIntent().getSerializableExtra(ITEM_ID);
+        mItem = StoredItems.getInstance(getApplicationContext()).getItem(itemId);
         setContentView(R.layout.activity_edit_item);
         findViewsById();
 
@@ -104,7 +105,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 // TODO: 3/31/17 fix this after you get info from actual datepicker (there should only be one)
 //                mItem.setExpirationDate(mExpireDate);
 //                mItem.setPurchaseDate(mPurchaseDate);
-                StoredItems.getInstance().updateItem(mItem);
+                StoredItems.getInstance(getApplicationContext()).updateItem(mItem);
                 // TODO: 3/31/17 exit once saved to pager view for this item
                 // TODO: 4/1/17
 
@@ -118,7 +119,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         ArrayAdapter<String> locationArray = new ArrayAdapter<>(
                 this,
                 R.layout.support_simple_spinner_dropdown_item,
-                Location.getLocationsAsStrings());
+                StoredItems.getInstance(getApplicationContext()).getLocations());
         mLocation.setAdapter(locationArray);
     }
 

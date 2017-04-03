@@ -74,7 +74,7 @@ public class ItemListFragment extends Fragment {
                 Toast.makeText(getActivity(), "Added a new item", Toast.LENGTH_SHORT).show();
                 Intent newItemIntent = new Intent(getActivity(), ItemEditActivity.class);
                 Item newItem = new Item();
-                newItem.save();
+                StoredItems.getInstance(getContext()).addItem(newItem);
                 newItemIntent.putExtra(ItemEditActivity.ITEM_ID, newItem.getId());
                 startActivity(newItemIntent);
                 return true;
@@ -99,7 +99,7 @@ public class ItemListFragment extends Fragment {
     }
 
     public void updateUI(SortOptions option) {
-        StoredItems storedItems = StoredItems.getInstance();
+        StoredItems storedItems = StoredItems.getInstance(getContext());
         List<Item> items;
         switch (option) {
             case EXPIRE:
@@ -126,7 +126,7 @@ public class ItemListFragment extends Fragment {
     }
 
     public void updateUI() {
-        StoredItems storedItems = StoredItems.getInstance();
+        StoredItems storedItems = StoredItems.getInstance(getContext());
         List<Item> items = storedItems.sortByExpirationDate(ItemType.STORED);
 
         if (mItemAdapter == null) {

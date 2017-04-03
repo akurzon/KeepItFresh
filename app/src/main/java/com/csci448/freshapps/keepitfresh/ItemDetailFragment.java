@@ -56,7 +56,7 @@ public class ItemDetailFragment extends Fragment {
         mExpireDate.setText(mItem.getExpirationDate().toString());
         mPurchaseDate.setText(mItem.getPurchaseDate().toString());
         mLocation.setText(mItem.getLocation());
-        mQuantity.setText(mItem.getQuantity());
+        mQuantity.setText(String.valueOf(mItem.getQuantity()));
 
         mEditButton = (Button) v.findViewById(R.id.item_detail_edit_button);
         mEditButton.setOnClickListener(new View.OnClickListener() {

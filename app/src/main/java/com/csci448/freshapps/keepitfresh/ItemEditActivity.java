@@ -12,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,7 +48,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         mDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         setupDatePickerDialogues();
         setupLocationSpinner();
-        setupSaveButton();
+//        setupSaveButton();
         setupListeners();
     }
 
@@ -61,6 +62,19 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // test for non zero quantity and non empty name field before saving
+                if (mQuantity.getText().toString().equals("0")) {
+                    Toast.makeText(getApplicationContext(), R.string.error_quantity,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mTitle.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(), R.string.error_no_name,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mItem.setName(mTitle.getText().toString());
                 mItem.setExpirationDate(mExpireDate);
                 mItem.setPurchaseDate(mPurchaseDate);
                 mItem.setQuantity(Integer.valueOf(mQuantity.getText().toString()));
@@ -68,9 +82,6 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 // TODO: 4/3/17 set booleans for item
 
                 StoredItems.getInstance(getApplicationContext()).updateItem(mItem);
-                // TODO: 4/3/17 check for non-zero quantity
-
-                // TODO: 4/3/17 exit activity once item saved
                 setResult(RESULT_OK);
                 finish();
             }
@@ -84,6 +95,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         mPurchaseDateTextView = (TextView) findViewById(R.id.purchase_date_text_view);
         mExpireDateHeader = (TextView) findViewById(R.id.edit_expiration_date_header);
         mPurchaseDateHeader = (TextView) findViewById(R.id.edit_purchase_date_header);
+        mSaveButton = (Button) findViewById(R.id.item_save_button);
     }
 
     private void setupDatePickerDialogues() {
@@ -124,26 +136,26 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         );
     }
 
-    private void setupSaveButton() {
-        mSaveButton = (Button) findViewById(R.id.item_save_button);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mItem.setName(mTitle.getText().toString());
-                //quantity is an int
-                mItem.setQuantity(Integer.parseInt(mQuantity.getText().toString()));
-                //do expire and purchase dates
-                // TODO: 3/31/17 fix this after you get info from actual datepicker (there should only be one)
-//                mItem.setExpirationDate(mExpireDate);
-//                mItem.setPurchaseDate(mPurchaseDate);
-                StoredItems.getInstance(getApplicationContext()).updateItem(mItem);
-                // TODO: 3/31/17 exit once saved to pager view for this item
-                // TODO: 4/1/17
-
-                onBackPressed();
-            }
-        });
-    }
+//    private void setupSaveButton() {
+//
+//        mSaveButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mItem.setName(mTitle.getText().toString());
+//                //quantity is an int
+//                mItem.setQuantity(Integer.parseInt(mQuantity.getText().toString()));
+//                //do expire and purchase dates
+//                // TODO: 3/31/17 fix this after you get info from actual datepicker (there should only be one)
+////                mItem.setExpirationDate(mExpireDate);
+////                mItem.setPurchaseDate(mPurchaseDate);
+//                StoredItems.getInstance(getApplicationContext()).updateItem(mItem);
+//                // TODO: 3/31/17 exit once saved to pager view for this item
+//                // TODO: 4/1/17
+//
+//                onBackPressed();
+//            }
+//        });
+//    }
 
     private void setupLocationSpinner() {
         mLocation = (Spinner) findViewById(R.id.item_location_spinner);

@@ -33,4 +33,6 @@
     <string name="shopping_list">Shopping List</string>
     <string name="item_detail_shopping">Send to Shopping List</string>
     <string name="toast_add_to_shopping">Added to Shopping List</string>
+    <string name="error_quantity">Quantity must be nonzero</string>
+    <string name="error_no_name">Item must have a name</string>
 </resources>

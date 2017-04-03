@@ -34,8 +34,14 @@ public class ShoppingListActivity extends AppCompatActivity {
     private void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(this);
         List<Item> items = storedItems.getShoppingList();
-        mAdapter = new ListAdapter(items);
-        mShoppingRecyclerView.setAdapter(mAdapter);
+
+        if (mAdapter == null) {
+            mAdapter = new ListAdapter(items);
+            mShoppingRecyclerView.setAdapter(mAdapter);
+        }
+        else {
+            mAdapter.updateItems(items);
+        }
     }
 
     private class ListHolder extends RecyclerView.ViewHolder {
@@ -83,6 +89,11 @@ public class ShoppingListActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return mItems.size();
+        }
+
+        public void updateItems(List<Item> items) {
+            mItems = items;
+            notifyDataSetChanged();
         }
     }
 }

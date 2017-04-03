@@ -70,7 +70,7 @@ public class ItemListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch ((item.getItemId())) {
             case R.id.menu_item_new_item:
-                Toast.makeText(getActivity(), "Added a new item", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Added a new item", Toast.LENGTH_SHORT).show();
                 Intent newItemIntent = new Intent(getActivity(), ItemEditActivity.class);
                 Item newItem = new Item();
                 StoredItems.getInstance(getContext()).addItem(newItem);

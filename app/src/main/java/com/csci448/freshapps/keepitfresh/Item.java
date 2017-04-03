@@ -50,7 +50,7 @@ public class Item {
         mName = "";
         mExpirationDate = new Date(System.currentTimeMillis());
         mPurchaseDate = new Date(System.currentTimeMillis());
-        mQuantity = 0;
+        mQuantity = 1;
         mLocation = null;
         mOnShoppingList = false;
         mIsChecked = false;

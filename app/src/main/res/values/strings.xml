@@ -30,4 +30,7 @@
     <string name="purchase_set">Set Purchase Date: </string>
     <string name="save">Save</string>
     <string name="title_hint">Enter a name for the item.</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="item_detail_shopping">Send to Shopping List</string>
+    <string name="toast_add_to_shopping">Added to Shopping List</string>
 </resources>

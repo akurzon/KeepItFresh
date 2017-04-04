@@ -19,9 +19,11 @@ import java.util.List;
 public class ItemListFragment extends Fragment {
 
     private static final int REQUEST_OPTION = 0;
+    private static final int REQUEST_NEW_ITEM = 1;
     private static final String DIALOG_OPTION = "option";
     private RecyclerView mRecyclerView;
     private ItemAdapter mItemAdapter;
+    private SortOptions mSortOption = SortOptions.EXPIRE;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,10 +40,12 @@ public class ItemListFragment extends Fragment {
         // TODO: 3/3/17 change from if else to switch case for handling requests
         switch (requestCode) {
             case REQUEST_OPTION:
-                SortOptions option = (SortOptions)
+                mSortOption = (SortOptions)
                         data.getSerializableExtra(SortOptionsDialogFragment.EXTRA_SORT_OPTION);
-                updateUI(option);
+                updateUI();
                 break;
+            case REQUEST_NEW_ITEM:
+                updateUI();
             default:
                 updateUI();
                 break;
@@ -75,7 +79,7 @@ public class ItemListFragment extends Fragment {
                 Item newItem = new Item();
                 StoredItems.getInstance(getContext()).addItem(newItem);
                 newItemIntent.putExtra(ItemEditActivity.ITEM_ID, newItem.getId());
-                startActivity(newItemIntent);
+                startActivityForResult(newItemIntent, REQUEST_NEW_ITEM);
                 return true;
             case R.id.menu_item_shopping_list:
                 Intent shoppingIntent = new Intent(getActivity(), ShoppingListActivity.class);
@@ -101,10 +105,10 @@ public class ItemListFragment extends Fragment {
         }
     }
 
-    public void updateUI(SortOptions option) {
+    public void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(getContext());
         List<Item> items;
-        switch (option) {
+        switch (mSortOption) {
             case EXPIRE:
                 items = storedItems.sortByExpirationDate(ItemType.STORED);
                 break;
@@ -128,18 +132,18 @@ public class ItemListFragment extends Fragment {
         }
     }
 
-    public void updateUI() {
-        StoredItems storedItems = StoredItems.getInstance(getContext());
-        List<Item> items = storedItems.sortByExpirationDate(ItemType.STORED);
-
-        if (mItemAdapter == null) {
-            mItemAdapter = new ItemAdapter(items);
-            mRecyclerView.setAdapter(mItemAdapter);
-        }
-        else {
-            mItemAdapter.updateItems(items);
-        }
-    }
+//    public void updateUI() {
+//        StoredItems storedItems = StoredItems.getInstance(getContext());
+//        List<Item> items = storedItems.sortByExpirationDate(ItemType.STORED);
+//
+//        if (mItemAdapter == null) {
+//            mItemAdapter = new ItemAdapter(items);
+//            mRecyclerView.setAdapter(mItemAdapter);
+//        }
+//        else {
+//            mItemAdapter.updateItems(items);
+//        }
+//    }
 
     private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mItemNameTextView;

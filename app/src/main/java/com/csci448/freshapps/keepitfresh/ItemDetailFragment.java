@@ -22,8 +22,9 @@ public class ItemDetailFragment extends Fragment {
     private static final int REQUEST_EDIT_ITEM = 0;
 
     private TextView mTitle, mExpireDate, mPurchaseDate, mLocation, mQuantity;
-    private Button mEditButton, mShoppingButton;
+    private Button mEditButton, mShoppingButton, mDeleteButton;
     private SimpleDateFormat mDateFormat;
+    private StoredItems mStoredItems;
 
     private Item mItem;
 
@@ -39,8 +40,9 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        mStoredItems = StoredItems.getInstance(getContext());
         UUID itemId = (UUID) getArguments().getSerializable(ITEM_ID);
-        mItem = StoredItems.getInstance(getContext()).getItem(itemId);
+        mItem = mStoredItems.getItem(itemId);
         mDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
     }
 
@@ -65,12 +67,20 @@ public class ItemDetailFragment extends Fragment {
         mShoppingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 4/3/2017 Set the boolean for shopping list to true, and checked to false, update item, provide toast
                 mItem.setOnShoppingList(true);
                 mItem.setChecked(false);
                 String s = getString(R.string.toast_add_to_shopping);
                 showToast(s);
                 StoredItems.getInstance(getActivity()).updateItem(mItem);
+            }
+        });
+
+        mDeleteButton = (Button) v.findViewById(R.id.item_detail_delete_button);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStoredItems.deleteItem(mItem);
+                getActivity().finish();
             }
         });
         
@@ -103,7 +113,7 @@ public class ItemDetailFragment extends Fragment {
     }
 
     private void updateUI() {
-        mItem = StoredItems.getInstance(getContext()).getItem(mItem.getId());
+        mItem = mStoredItems.getItem(mItem.getId());
         mTitle.setText(mItem.getName());
         mExpireDate.setText(mDateFormat.format(mItem.getExpirationDate()));
         mPurchaseDate.setText(mDateFormat.format(mItem.getPurchaseDate()));

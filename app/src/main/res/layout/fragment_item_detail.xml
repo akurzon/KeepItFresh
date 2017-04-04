@@ -103,4 +103,10 @@
         android:layout_height="wrap_content"
         android:text="@string/item_detail_shopping"/>
 
+    <Button
+        android:id="@+id/item_detail_delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_delete_item"/>
+
 </LinearLayout>

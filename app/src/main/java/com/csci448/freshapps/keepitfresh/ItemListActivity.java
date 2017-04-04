@@ -35,6 +35,7 @@ public class ItemListActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
+        // TODO: 4/3/2017 Change hardcoded strings to locations from database 
         mLocations[0] = "All";
         mLocations[1] = "Fridge";
         mLocations[2] = "Freezer";
@@ -46,6 +47,7 @@ public class ItemListActivity extends SingleFragmentActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                //// TODO: 4/3/2017 update list on fragment for location selected 
                 showToast(mLocations[pos] + " clicked!");
             }
         });

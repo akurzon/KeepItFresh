@@ -23,17 +23,18 @@ public class ShoppingListActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        setContentView(R.layout.activity_shopping_list);
 
         mShoppingRecyclerView = (RecyclerView) findViewById(R.id.shopping_recycler_view);
         //in case we have to turn this into a fragment
-        //mShoppingRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mShoppingRecyclerView.setLayoutManager(new LinearLayoutManager(ShoppingListActivity.this));
 
         updateUI();
     }
 
     private void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(this);
-        List<Item> items = storedItems.getShoppingList();
+        List<Item> items = storedItems.getInstance(this).getShoppingList();
 
         if (mAdapter == null) {
             mAdapter = new ListAdapter(items);

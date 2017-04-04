@@ -72,6 +72,7 @@ public class ItemDetailFragment extends Fragment {
                 mItem.setChecked(false);
                 String s = getString(R.string.toast_add_to_shopping);
                 showToast(s);
+                StoredItems.getInstance(getActivity()).updateItem(mItem);
             }
         });
         

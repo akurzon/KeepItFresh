@@ -43,7 +43,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         findViewsById();
 
         mTitle.setText(mItem.getName());
-        mQuantity.setText(String.valueOf(mItem.getQuantity()));
+        mQuantity.setHint(String.valueOf(mItem.getQuantity()));
 
         mDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         setupDatePickerDialogues();

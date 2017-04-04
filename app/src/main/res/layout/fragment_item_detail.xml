@@ -20,8 +20,9 @@
             android:id="@+id/expiration_date_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sort_by_expire_date"
-            android:textStyle="bold"/>
+            android:text="@string/expiration_date"
+            android:textStyle="bold"
+            android:paddingRight="16dp"/>
 
         <TextView
             android:id="@+id/item_expire_date_text"
@@ -39,8 +40,9 @@
             android:id="@+id/purchase_date_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sort_by_purchase_date"
-            android:textStyle="bold"/>
+            android:text="@string/purchase_date"
+            android:textStyle="bold"
+            android:paddingRight="16dp"/>
 
         <TextView
             android:id="@+id/item_purchase_date_text"
@@ -59,7 +61,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/quantity"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:paddingRight="16dp"/>
 
         <TextView
             android:id="@+id/item_quantity_text"
@@ -78,7 +81,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/location"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:paddingRight="16dp"/>
 
         <TextView
             android:id="@+id/item_location_text"

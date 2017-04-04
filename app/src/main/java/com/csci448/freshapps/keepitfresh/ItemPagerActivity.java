@@ -33,7 +33,7 @@ public class ItemPagerActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_item_pager);
 
-        long itemId = getIntent().getLongExtra(EXTRA_ITEM_ID, 0);
+        UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_item_pager_view_pager);
 

@@ -45,6 +45,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle bunduru) {
         super.onCreate(bunduru);
+        setTitle(R.string.edit_item);
         mStoredItems = StoredItems.getInstance(getApplicationContext());
         UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
         mIsNewItem = getIntent().getBooleanExtra(EXTRA_NEW_ITEM, false);

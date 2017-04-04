@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KeepItFresh</string>
+    <string name="app_name">Keep It Fresh</string>
     <string name="new_item_menu_option">New Item</string>
     <string name="sort_by_menu_option">Sort by…</string>
     <string name="settings_menu_option">Settings</string>
@@ -42,4 +42,5 @@
     <string name="expire_date_label">Expires: %1$s</string>
     <string name="purchase_date_label">Purchased: %1$s</string>
     <string name="all">All</string>
+    <string name="edit_item">Edit Item</string>
 </resources>

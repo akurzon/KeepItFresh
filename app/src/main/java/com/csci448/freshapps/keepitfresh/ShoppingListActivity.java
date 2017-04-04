@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ShoppingListActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        setTitle(R.string.shopping_list);
         setContentView(R.layout.activity_shopping_list);
 
         mShoppingRecyclerView = (RecyclerView) findViewById(R.id.shopping_recycler_view);
@@ -32,6 +34,16 @@ public class ShoppingListActivity extends AppCompatActivity {
         updateUI();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        List<Item> items = mAdapter.getItems();
+        for (Item item : items) {
+            StoredItems.getInstance(this).updateItem(item);
+        }
+    }
+
     private void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(this);
         List<Item> items = storedItems.getInstance(this).getShoppingList();
@@ -39,8 +51,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         if (mAdapter == null) {
             mAdapter = new ListAdapter(items);
             mShoppingRecyclerView.setAdapter(mAdapter);
-        }
-        else {
+        } else {
             mAdapter.updateItems(items);
         }
     }
@@ -63,6 +74,12 @@ public class ShoppingListActivity extends AppCompatActivity {
             mItem = item;
             mName.setText(mItem.getName());
             mChecked.setChecked(mItem.isChecked());
+            mChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mItem.setChecked(isChecked);
+                }
+            });
         }
     }
 
@@ -95,6 +112,10 @@ public class ShoppingListActivity extends AppCompatActivity {
         public void updateItems(List<Item> items) {
             mItems = items;
             notifyDataSetChanged();
+        }
+
+        public List<Item> getItems() {
+            return mItems;
         }
     }
 }

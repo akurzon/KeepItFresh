@@ -68,7 +68,6 @@ public class ShoppingListActivity extends AppCompatActivity {
             case R.id.menu_item_new_item:
                 final EditText editText = new EditText(this);
                 editText.setHint(R.string.hint_shopping_list_new_item);
-//                editText.setLayoutParams(new LinearLayout.LayoutParams(this,));
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setView(editText)
                     .setTitle(R.string.new_shopping_list_item_title)
@@ -77,7 +76,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                             Item newItem = new Item();
                             newItem.setName(editText.getText().toString());
                             newItem.setOnShoppingList(true);
-                            mStoredItems.updateItem(newItem);
+                            mStoredItems.addItem(newItem);
                             updateUI();
                             dialog.dismiss();
                         }

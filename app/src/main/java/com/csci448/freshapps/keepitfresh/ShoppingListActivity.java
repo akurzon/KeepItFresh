@@ -34,7 +34,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     private void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(this);
-        List<Item> items = storedItems.getShoppingList();
+        List<Item> items = storedItems.getInstance(this).getShoppingList();
 
         if (mAdapter == null) {
             mAdapter = new ListAdapter(items);

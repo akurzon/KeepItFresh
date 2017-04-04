@@ -22,8 +22,10 @@
         \nAleksandr Kurzon and Nathan Pohl.</string>
     <string name="about_page_info_2">The icon used for the app was designed by Madebyoliver on flaticon.com</string>
     <string name="item_detail_editable_checkbox">Edit</string>
-    <string name="location">Location</string>
-    <string name="quantity">Quantity</string>
+    <string name="expiration_date">Expiration Date:</string>
+    <string name="purchase_date">Purchase Date:</string>
+    <string name="location">Location:</string>
+    <string name="quantity">Quantity:</string>
     <string name="location_set">Set Location: </string>
     <string name="quantity_set">Set Quantity: </string>
     <string name="expiration_set">Set Expiration Date: </string>

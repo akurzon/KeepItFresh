@@ -2,8 +2,8 @@ package com.csci448.freshapps.keepitfresh;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,7 +24,8 @@ import java.util.UUID;
 
 public class ItemEditActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String ITEM_ID = "item_id";
+    private static final String EXTRA_ITEM_ID = "item_id";
+    private static final String EXTRA_NEW_ITEM = "new_item";
 
     private EditText mTitle;
     private Spinner mLocation;
@@ -37,12 +38,17 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     private Dialog mNumberPickerDialog;
     private SimpleDateFormat mDateFormat;
     private Item mItem;
+    private StoredItems mStoredItems;
+    private boolean mItemSaved = false;
+    private boolean mIsNewItem;
 
     @Override
     protected void onCreate(Bundle bunduru) {
         super.onCreate(bunduru);
-        UUID itemId = (UUID) getIntent().getSerializableExtra(ITEM_ID);
-        mItem = StoredItems.getInstance(getApplicationContext()).getItem(itemId);
+        mStoredItems = StoredItems.getInstance(getApplicationContext());
+        UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
+        mIsNewItem = getIntent().getBooleanExtra(EXTRA_NEW_ITEM, false);
+        mItem = mStoredItems.getItem(itemId);
         setContentView(R.layout.activity_edit_item);
         findViewsById();
 
@@ -52,8 +58,22 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         setupDatePickerDialogues();
         setupNumberPickerDialog();
         setupLocationSpinner();
-//        setupSaveButton();
         setupListeners();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!mItemSaved && mIsNewItem) {
+            mStoredItems.deleteItem(mItem);
+        }
+    }
+
+    public static Intent newIntent(Context context, UUID itemId, boolean isNewItem) {
+        Intent intent = new Intent(context, ItemEditActivity.class);
+        intent.putExtra(EXTRA_ITEM_ID, itemId);
+        intent.putExtra(EXTRA_NEW_ITEM, isNewItem);
+        return intent;
     }
 
     private void setupListeners() {
@@ -86,7 +106,8 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 mItem.setLocation(mLocation.getSelectedItem().toString());
                 // TODO: 4/3/17 set booleans for item
 
-                StoredItems.getInstance(getApplicationContext()).updateItem(mItem);
+                mItemSaved = true;
+                mStoredItems.updateItem(mItem);
                 setResult(RESULT_OK);
                 finish();
             }
@@ -176,7 +197,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         ArrayAdapter<String> locationArray = new ArrayAdapter<>(
                 this,
                 R.layout.support_simple_spinner_dropdown_item,
-                StoredItems.getInstance(getApplicationContext()).getLocations());
+                mStoredItems.getLocations());
         mLocation.setAdapter(locationArray);
     }
 

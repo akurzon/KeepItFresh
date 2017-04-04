@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -83,10 +82,13 @@ public class ItemListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch ((item.getItemId())) {
             case R.id.menu_item_new_item:
-                Intent newItemIntent = new Intent(getActivity(), ItemEditActivity.class);
                 Item newItem = new Item();
                 StoredItems.getInstance(getContext()).addItem(newItem);
-                newItemIntent.putExtra(ItemEditActivity.ITEM_ID, newItem.getId());
+
+                Intent newItemIntent = ItemEditActivity.newIntent(
+                        getActivity(), newItem.getId(), true);
+//                        new Intent(getActivity(), ItemEditActivity.class);
+//                newItemIntent.putExtra(ItemEditActivity.EXTRA_ITEM_ID, newItem.getId());
                 startActivityForResult(newItemIntent, REQUEST_NEW_ITEM);
                 return true;
             case R.id.menu_item_shopping_list:

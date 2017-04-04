@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,8 +54,9 @@ public class ItemDetailFragment extends Fragment {
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent editIntent = new Intent(getActivity(), ItemEditActivity.class);
-                editIntent.putExtra(ItemEditActivity.ITEM_ID, mItem.getId());
+                Intent editIntent = ItemEditActivity.newIntent(getActivity(), mItem.getId(), false);
+//                        new Intent(getActivity(), ItemEditActivity.class);
+//                editIntent.putExtra(ItemEditActivity.EXTRA_ITEM_ID, mItem.getId());
                 startActivityForResult(editIntent, REQUEST_EDIT_ITEM);
             }
         });

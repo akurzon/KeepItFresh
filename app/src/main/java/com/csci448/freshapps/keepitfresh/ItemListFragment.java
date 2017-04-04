@@ -83,7 +83,6 @@ public class ItemListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch ((item.getItemId())) {
             case R.id.menu_item_new_item:
-                //Toast.makeText(getActivity(), "Added a new item", Toast.LENGTH_SHORT).show();
                 Intent newItemIntent = new Intent(getActivity(), ItemEditActivity.class);
                 Item newItem = new Item();
                 StoredItems.getInstance(getContext()).addItem(newItem);
@@ -208,5 +207,18 @@ public class ItemListFragment extends Fragment {
             mItems = items;
             notifyDataSetChanged();
         }
+
+    }
+
+    public void filterListByLocation(String location) {
+        //if the string is equal to R.string.all ("All") then we want to show all items
+        List<Item> items;
+        if (location.equals(getString(R.string.all))) {
+            items = StoredItems.getInstance(getActivity()).getItemList();
+        }
+        else {
+            items = StoredItems.getInstance(getActivity()).getItemsFromLocation(location);
+        }
+        mItemAdapter.updateItems(items);
     }
 }

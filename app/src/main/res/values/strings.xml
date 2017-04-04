@@ -41,4 +41,5 @@
     <string name="set">Set</string>
     <string name="expire_date_label">Expires: %1$s</string>
     <string name="purchase_date_label">Purchased: %1$s</string>
+    <string name="all">All</string>
 </resources>

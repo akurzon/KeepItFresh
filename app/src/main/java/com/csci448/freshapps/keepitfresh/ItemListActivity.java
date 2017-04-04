@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 
 public class ItemListActivity extends SingleFragmentActivity {
 
@@ -23,7 +25,8 @@ public class ItemListActivity extends SingleFragmentActivity {
     private DrawerLayout mDrawerLayout;
 
     private String mActivityTitle;
-    private String[] mLocations = new String[4];
+    //private String[] mLocations = new String[4];
+    private List<String> mLocations;
 
     @Override
     protected Fragment createFragment() {
@@ -35,11 +38,9 @@ public class ItemListActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
-        // TODO: 4/3/2017 Change hardcoded strings to locations from database 
-        mLocations[0] = "All";
-        mLocations[1] = "Fridge";
-        mLocations[2] = "Freezer";
-        mLocations[3] = "Pantry";
+        // TODO: 4/3/2017 Change hardcoded strings to locations from database
+        mLocations = StoredItems.getInstance(this).getLocations();
+        mLocations.add(0, getString(R.string.all));
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mLocations);
@@ -47,8 +48,8 @@ public class ItemListActivity extends SingleFragmentActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                //// TODO: 4/3/2017 update list on fragment for location selected 
-                showToast(mLocations[pos] + " clicked!");
+                ItemListFragment f = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                f.filterListByLocation(mLocations.get(pos));
             }
         });
 

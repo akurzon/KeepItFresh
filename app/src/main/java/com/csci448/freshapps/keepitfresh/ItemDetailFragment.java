@@ -1,5 +1,6 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ItemDetailFragment extends Fragment {
@@ -15,7 +17,7 @@ public class ItemDetailFragment extends Fragment {
     private static final String ITEM_ID = "item_id";
 
     private TextView mTitle, mExpireDate, mPurchaseDate, mLocation, mQuantity;
-    private Button mEditButton;
+    private Button mEditButton, mShoppingButton;
 
     private Item mItem;
 
@@ -39,7 +41,7 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
         // TODO: 4/2/2017 Add a button that will add the item to the shopping list 
-/*
+
         mTitle = (TextView) v.findViewById(R.id.item_title);
         mExpireDate = (TextView) v.findViewById(R.id.item_expire_date_text);
         mPurchaseDate = (TextView) v.findViewById(R.id.item_purchase_date_text);
@@ -58,10 +60,27 @@ public class ItemDetailFragment extends Fragment {
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent editIntent = new Intent(getActivity(), ItemEditActivity.class);
+                startActivity(editIntent);
             }
         });
-*/
-    
+        
+        mShoppingButton = (Button) v.findViewById(R.id.item_detail_shopping_button);
+        mShoppingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 4/3/2017 Set the boolean for shopping list to true, and checked to false, update item, provide toast
+                mItem.setOnShoppingList(true);
+                mItem.setChecked(false);
+                String s = getString(R.string.toast_add_to_shopping);
+                showToast(s);
+            }
+        });
+        
         return v;
+    }
+
+    private void showToast(String string) {
+        Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
     }
 }

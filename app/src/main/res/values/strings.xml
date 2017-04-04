@@ -28,7 +28,7 @@
     <string name="quantity">Quantity:</string>
     <string name="location_set">Set Location: </string>
     <string name="quantity_set">Set Quantity: </string>
-    <string name="expiration_set">Set Expiration Date: </string>
+    <string name="set_expiration_set">Set Expiration Date: </string>
     <string name="purchase_set">Set Purchase Date: </string>
     <string name="save">Save</string>
     <string name="title_hint">Enter a name for the item.</string>
@@ -37,4 +37,6 @@
     <string name="toast_add_to_shopping">Added to Shopping List</string>
     <string name="error_quantity">Quantity must be nonzero</string>
     <string name="error_no_name">Item must have a name</string>
+    <string name="expire_date_label">Expires: %1$s</string>
+    <string name="purchase_date_label">Purchased: %1$s</string>
 </resources>

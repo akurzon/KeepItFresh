@@ -180,7 +180,7 @@ public class ItemListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId());
+            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(), mSortOption);
             startActivityForResult(intent, REQUEST_ITEM_DETAIL);
         }
     }

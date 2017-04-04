@@ -48,11 +48,9 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
-        // TODO: 4/2/2017 Add a button that will add the item to the shopping list 
 
         findViewsById(v);
         updateUI();
-
 
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +83,6 @@ public class ItemDetailFragment extends Fragment {
             return;
         }
 
-        // TODO: 3/3/17 change from if else to switch case for handling requests
         switch (requestCode) {
             case REQUEST_EDIT_ITEM:
                 updateUI();
@@ -108,8 +105,6 @@ public class ItemDetailFragment extends Fragment {
     private void updateUI() {
         mItem = StoredItems.getInstance(getContext()).getItem(mItem.getId());
         mTitle.setText(mItem.getName());
-        // TODO: 3/2/17 get better date formatting
-        // TODO: 3/2/17 change to string resource with insert formatting
         mExpireDate.setText(mDateFormat.format(mItem.getExpirationDate()));
         mPurchaseDate.setText(mDateFormat.format(mItem.getPurchaseDate()));
         mLocation.setText(mItem.getLocation());

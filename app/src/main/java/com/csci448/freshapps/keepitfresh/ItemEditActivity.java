@@ -57,7 +57,6 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setupListeners() {
-        //TODO: 3/29/17 onclicklistener to save the item data to database, close activity
         mExpireDateTextView.setOnClickListener(this);
         mPurchaseDateTextView.setOnClickListener(this);
         mExpireDateHeader.setOnClickListener(this);

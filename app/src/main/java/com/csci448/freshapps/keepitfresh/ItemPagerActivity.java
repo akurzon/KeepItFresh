@@ -18,13 +18,16 @@ import java.util.UUID;
 
 public class ItemPagerActivity extends AppCompatActivity {
     private static final String EXTRA_ITEM_ID = "item_id";
+    private static final String EXTRA_SORT_OPTION = "sort_option";
 
     private ViewPager mViewPager;
     private List<Item> mItems;
+    private SortOptions mSortOption;
 
-    public static Intent newIntent(Context context, UUID itemId) {
+    public static Intent newIntent(Context context, UUID itemId, SortOptions sortOption) {
         Intent intent = new Intent(context, ItemPagerActivity.class);
         intent.putExtra(EXTRA_ITEM_ID, itemId);
+        intent.putExtra(EXTRA_SORT_OPTION, sortOption);
         return intent;
     }
 
@@ -33,12 +36,23 @@ public class ItemPagerActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_item_pager);
 
-        long itemId = getIntent().getLongExtra(EXTRA_ITEM_ID, 0);
+        UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
+        mSortOption = (SortOptions)getIntent().getSerializableExtra(EXTRA_SORT_OPTION);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_item_pager_view_pager);
 
-        // TODO: 3/31/17 check the bundle for sort information, and get the properly sorted list
-        mItems = StoredItems.getInstance(getApplicationContext()).getItemList();
+        switch (mSortOption) {
+            case EXPIRE:
+                mItems = StoredItems.getInstance(this).sortByExpirationDate(ItemType.STORED);
+                break;
+            case NAME:
+                mItems = StoredItems.getInstance(this).sortByName(ItemType.STORED);
+                break;
+            case PURCHASE:
+                mItems = StoredItems.getInstance(this).sortByPurchaseDate(ItemType.STORED);
+                break;
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override

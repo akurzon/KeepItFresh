@@ -23,7 +23,7 @@
             android:id="@+id/edit_expiration_date_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/expiration_set"
+            android:text="@string/set_expiration_set"
             android:textStyle="bold"
             android:paddingEnd="16dp"/>
 

@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ItemListFragment extends Fragment {
 
@@ -25,10 +28,12 @@ public class ItemListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ItemAdapter mItemAdapter;
     private SortOptions mSortOption = SortOptions.EXPIRE;
+    private SimpleDateFormat mDateFormat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         setHasOptionsMenu(true);
     }
 
@@ -51,7 +56,6 @@ public class ItemListFragment extends Fragment {
             return;
         }
 
-        // TODO: 3/3/17 change from if else to switch case for handling requests
         switch (requestCode) {
             case REQUEST_OPTION:
                 mSortOption = (SortOptions)
@@ -137,19 +141,6 @@ public class ItemListFragment extends Fragment {
         }
     }
 
-//    public void updateUI() {
-//        StoredItems storedItems = StoredItems.getInstance(getContext());
-//        List<Item> items = storedItems.sortByExpirationDate(ItemType.STORED);
-//
-//        if (mItemAdapter == null) {
-//            mItemAdapter = new ItemAdapter(items);
-//            mRecyclerView.setAdapter(mItemAdapter);
-//        }
-//        else {
-//            mItemAdapter.updateItems(items);
-//        }
-//    }
-
     private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mItemNameTextView;
         private TextView mExpireDateTextView;
@@ -174,13 +165,15 @@ public class ItemListFragment extends Fragment {
             mItemNameTextView.setText(mItem.getName());
             // TODO: 3/2/17 get better date formatting
             // TODO: 3/2/17 change to string resource with insert formatting
-            mExpireDateTextView.setText("exp: " + mItem.getExpirationDate().toString());
-            mPurchaseDateTextView.setText("pur: " + mItem.getPurchaseDate().toString());
+            mExpireDateTextView.setText(getResources().getString(R.string.expire_date_label,
+                    mDateFormat.format(mItem.getExpirationDate())));
+            mPurchaseDateTextView.setText(getResources().getString(R.string.purchase_date_label,
+                    mDateFormat.format(mItem.getPurchaseDate())));
         }
 
         @Override
         public void onClick(View v) {
-            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId());
+            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(), mSortOption);
             startActivityForResult(intent, REQUEST_ITEM_DETAIL);
         }
     }

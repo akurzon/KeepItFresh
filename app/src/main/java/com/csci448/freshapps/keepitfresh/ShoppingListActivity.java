@@ -18,7 +18,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.NumberPicker;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ public class ShoppingListActivity extends AppCompatActivity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mStoredItems = StoredItems.getInstance(this);
+        setTitle(R.string.shopping_list);
         setContentView(R.layout.activity_shopping_list);
 
         mShoppingRecyclerView = (RecyclerView) findViewById(R.id.shopping_recycler_view);
@@ -106,14 +109,22 @@ public class ShoppingListActivity extends AppCompatActivity {
         }
     }
 
+    public void onStop() {
+        super.onStop();
+
+        List<Item> items = mAdapter.getItems();
+        for (Item item : items) {
+            StoredItems.getInstance(this).updateItem(item);
+        }
+    }
+
     private void updateUI() {
         List<Item> items = mStoredItems.getShoppingList();
 
         if (mAdapter == null) {
             mAdapter = new ListAdapter(items);
             mShoppingRecyclerView.setAdapter(mAdapter);
-        }
-        else {
+        } else {
             mAdapter.updateItems(items);
         }
     }
@@ -134,6 +145,12 @@ public class ShoppingListActivity extends AppCompatActivity {
             mItem = item;
             mName.setText(mItem.getName());
             mChecked.setChecked(mItem.isChecked());
+            mChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mItem.setChecked(isChecked);
+                }
+            });
         }
     }
 
@@ -166,6 +183,10 @@ public class ShoppingListActivity extends AppCompatActivity {
         public void updateItems(List<Item> items) {
             mItems = items;
             notifyDataSetChanged();
+        }
+
+        public List<Item> getItems() {
+            return mItems;
         }
     }
 }

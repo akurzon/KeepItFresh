@@ -76,11 +76,11 @@
             android:textStyle="bold"
             android:paddingEnd="16dp"/>
 
-        <EditText
+        <TextView
             android:id="@+id/edit_item_quantity"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"/>
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
     <LinearLayout

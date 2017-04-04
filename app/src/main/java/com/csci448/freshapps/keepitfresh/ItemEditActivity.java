@@ -1,6 +1,7 @@
 package com.csci448.freshapps.keepitfresh;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +26,15 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
 
     public static final String ITEM_ID = "item_id";
 
-    private EditText mTitle, mQuantity;
+    private EditText mTitle;
     private Spinner mLocation;
     private Date mExpireDate, mPurchaseDate;
     private TextView mExpireDateTextView, mPurchaseDateTextView;
     private TextView mExpireDateHeader, mPurchaseDateHeader;
+    private TextView mQuantityHeader, mQuantity;
     private Button mSaveButton;
     private DatePickerDialog mExpireDatePickerDialog, mPurchaseDatePickerDialog;
+    private Dialog mNumberPickerDialog;
     private SimpleDateFormat mDateFormat;
     private Item mItem;
 
@@ -43,10 +47,10 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         findViewsById();
 
         mTitle.setText(mItem.getName());
-        mQuantity.setHint(String.valueOf(mItem.getQuantity()));
 
         mDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         setupDatePickerDialogues();
+        setupNumberPickerDialog();
         setupLocationSpinner();
 //        setupSaveButton();
         setupListeners();
@@ -58,12 +62,14 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         mPurchaseDateTextView.setOnClickListener(this);
         mExpireDateHeader.setOnClickListener(this);
         mPurchaseDateHeader.setOnClickListener(this);
+        mQuantityHeader.setOnClickListener(this);
+        mQuantity.setOnClickListener(this);
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // test for non zero quantity and non empty name field before saving
-                if (mQuantity.getText().toString().equals("0")) {
+                if (mQuantity.getText().toString().equals(0)) {
                     Toast.makeText(getApplicationContext(), R.string.error_quantity,
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -90,7 +96,8 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
 
     private void findViewsById() {
         mTitle = (EditText) findViewById(R.id.edit_item_title);
-        mQuantity = (EditText) findViewById(R.id.edit_item_quantity);
+        mQuantityHeader = (TextView) findViewById(R.id.edit_quantity_header);
+        mQuantity = (TextView) findViewById(R.id.edit_item_quantity);
         mExpireDateTextView = (TextView) findViewById(R.id.expiration_date_text_view);
         mPurchaseDateTextView = (TextView) findViewById(R.id.purchase_date_text_view);
         mExpireDateHeader = (TextView) findViewById(R.id.edit_expiration_date_header);
@@ -136,6 +143,35 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         );
     }
 
+    private void setupNumberPickerDialog() {
+        mQuantity.setText(String.valueOf(mItem.getQuantity()));
+        mNumberPickerDialog = new Dialog(this);
+        mNumberPickerDialog.setTitle(R.string.quantity_set);
+        mNumberPickerDialog.setContentView(R.layout.number_dialog);
+        Button cancelButton = (Button) mNumberPickerDialog.findViewById(R.id.button_cancel);
+        Button setButton = (Button) mNumberPickerDialog.findViewById(R.id.button_set);
+        final NumberPicker picker = (NumberPicker) mNumberPickerDialog.findViewById(R.id.quantity_picker);
+        picker.setMaxValue(100);
+        picker.setMinValue(0);
+        picker.setWrapSelectorWheel(false);
+        //picker.setOnValueChangedListener(NumberPicker.OnValueChangeListener());
+
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mQuantity.setText(String.valueOf(picker.getValue()));
+                mNumberPickerDialog.dismiss();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNumberPickerDialog.dismiss();
+            }
+        });
+    }
+
     private void setupLocationSpinner() {
         mLocation = (Spinner) findViewById(R.id.item_location_spinner);
         ArrayAdapter<String> locationArray = new ArrayAdapter<>(
@@ -152,6 +188,8 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
             mExpireDatePickerDialog.show();
         } else if (v == mPurchaseDateTextView || v == mPurchaseDateHeader) {
             mPurchaseDatePickerDialog.show();
+        } else if (v == mQuantityHeader || v == mQuantity) {
+            mNumberPickerDialog.show();
         }
     }
 

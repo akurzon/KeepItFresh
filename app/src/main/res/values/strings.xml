@@ -37,4 +37,6 @@
     <string name="toast_add_to_shopping">Added to Shopping List</string>
     <string name="error_quantity">Quantity must be nonzero</string>
     <string name="error_no_name">Item must have a name</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
 </resources>

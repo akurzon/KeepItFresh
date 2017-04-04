@@ -55,8 +55,8 @@ public class ShoppingListActivity extends AppCompatActivity {
         public ListHolder(View v) {
             super(v);
 
-            mName = (TextView) findViewById(R.id.shopping_list_item_name);
-            mChecked = (CheckBox) findViewById(R.id.shopping_list_item_checkbox);
+            mName = (TextView) v.findViewById(R.id.shopping_list_item_name);
+            mChecked = (CheckBox) v.findViewById(R.id.shopping_list_item_checkbox);
         }
 
         public void bindItem(Item item) {

@@ -1,14 +1,28 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.csci448.freshapps.keepitfresh.database.NewShoppingListItemDialogFragment;
 
 import java.util.List;
 
@@ -17,12 +31,17 @@ import java.util.List;
  */
 public class ShoppingListActivity extends AppCompatActivity {
 
+    private static final int REQUEST_NEW_ITEM = 0;
+    private static final String DIALOG_NEW_ITEM = "new_item";
     private RecyclerView mShoppingRecyclerView;
     private ListAdapter mAdapter;
+    private StoredItems mStoredItems;
+    private Dialog mNewItemDialog;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        mStoredItems = StoredItems.getInstance(this);
         setContentView(R.layout.activity_shopping_list);
 
         mShoppingRecyclerView = (RecyclerView) findViewById(R.id.shopping_recycler_view);
@@ -32,9 +51,63 @@ public class ShoppingListActivity extends AppCompatActivity {
         updateUI();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_shopping_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch ((item.getItemId())) {
+            case R.id.menu_item_new_item:
+                final EditText editText = new EditText(this);
+                editText.setHint(R.string.hint_shopping_list_new_item);
+//                editText.setLayoutParams(new LinearLayout.LayoutParams(this,));
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(editText)
+                    .setTitle(R.string.new_shopping_list_item_title)
+                    .setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Item newItem = new Item();
+                            newItem.setName(editText.getText().toString());
+                            newItem.setOnShoppingList(true);
+                            mStoredItems.updateItem(newItem);
+                            updateUI();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return true;
+            case R.id.menu_item_delete_checked_items:
+                for (Item i : mAdapter.mItems) {
+                    if (i.isChecked()) {
+                        i.setChecked(false);
+                        i.setOnShoppingList(false);
+                        mStoredItems.updateItem(i);
+                    }
+                }
+                updateUI();
+                return true;
+            // TODO: 4/3/17 create a way to acquire checked items
+//            case R.id.menu_item_acquire_checked_items:
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void updateUI() {
-        StoredItems storedItems = StoredItems.getInstance(this);
-        List<Item> items = storedItems.getInstance(this).getShoppingList();
+        List<Item> items = mStoredItems.getShoppingList();
 
         if (mAdapter == null) {
             mAdapter = new ListAdapter(items);
@@ -46,9 +119,7 @@ public class ShoppingListActivity extends AppCompatActivity {
     }
 
     private class ListHolder extends RecyclerView.ViewHolder {
-
         private Item mItem;
-
         private TextView mName;
         private CheckBox mChecked;
 

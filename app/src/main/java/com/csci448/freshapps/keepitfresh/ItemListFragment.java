@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -84,11 +83,8 @@ public class ItemListFragment extends Fragment {
             case R.id.menu_item_new_item:
                 Item newItem = new Item();
                 StoredItems.getInstance(getContext()).addItem(newItem);
-
                 Intent newItemIntent = ItemEditActivity.newIntent(
                         getActivity(), newItem.getId(), true);
-//                        new Intent(getActivity(), ItemEditActivity.class);
-//                newItemIntent.putExtra(ItemEditActivity.EXTRA_ITEM_ID, newItem.getId());
                 startActivityForResult(newItemIntent, REQUEST_NEW_ITEM);
                 return true;
             case R.id.menu_item_shopping_list:
@@ -96,13 +92,11 @@ public class ItemListFragment extends Fragment {
                 startActivity(shoppingIntent);
                 return true;
             case R.id.menu_item_sort_by:
-                Toast.makeText(getActivity(), "will filter", Toast.LENGTH_SHORT).show();
                 SortOptionsDialogFragment dialog = new SortOptionsDialogFragment();
                 dialog.setTargetFragment(ItemListFragment.this, REQUEST_OPTION);
                 dialog.show(getFragmentManager(), DIALOG_OPTION);
                 return true;
             case R.id.menu_item_settings:
-                Toast.makeText(getActivity(), "will open settings", Toast.LENGTH_SHORT).show();
                 Intent i = SettingsActivity.newIntent(getActivity());
                 startActivity(i);
                 return true;
@@ -142,10 +136,23 @@ public class ItemListFragment extends Fragment {
         }
     }
 
+    public void filterListByLocation(String location) {
+        //if the string is equal to R.string.all ("All") then we want to show all items
+        List<Item> items;
+        if (location.equals(getString(R.string.all))) {
+            items = StoredItems.getInstance(getActivity()).getItemList();
+        }
+        else {
+            items = StoredItems.getInstance(getActivity()).getItemsFromLocation(location);
+        }
+        mItemAdapter.updateItems(items);
+    }
+
     private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mItemNameTextView;
         private TextView mExpireDateTextView;
         private TextView mPurchaseDateTextView;
+
         private Item mItem;
 
         public ItemHolder(View itemView) {
@@ -171,15 +178,15 @@ public class ItemListFragment extends Fragment {
             mPurchaseDateTextView.setText(getResources().getString(R.string.purchase_date_label,
                     mDateFormat.format(mItem.getPurchaseDate())));
         }
-
         @Override
         public void onClick(View v) {
             Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(), mSortOption);
             startActivityForResult(intent, REQUEST_ITEM_DETAIL);
         }
-    }
 
+    }
     private class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
+
         private List<Item> mItems;
 
         public ItemAdapter(List<Item> items) {
@@ -210,17 +217,5 @@ public class ItemListFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-    }
-
-    public void filterListByLocation(String location) {
-        //if the string is equal to R.string.all ("All") then we want to show all items
-        List<Item> items;
-        if (location.equals(getString(R.string.all))) {
-            items = StoredItems.getInstance(getActivity()).getItemList();
-        }
-        else {
-            items = StoredItems.getInstance(getActivity()).getItemsFromLocation(location);
-        }
-        mItemAdapter.updateItems(items);
     }
 }

@@ -1,5 +1,6 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,15 +12,19 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.UUID;
 
 
 public class ItemDetailFragment extends Fragment {
 
     private static final String ITEM_ID = "item_id";
+    private static final int REQUEST_EDIT_ITEM = 0;
 
     private TextView mTitle, mExpireDate, mPurchaseDate, mLocation, mQuantity;
     private Button mEditButton, mShoppingButton;
+    private SimpleDateFormat mDateFormat;
 
     private Item mItem;
 
@@ -37,6 +42,7 @@ public class ItemDetailFragment extends Fragment {
         super.onCreate(bundle);
         UUID itemId = (UUID) getArguments().getSerializable(ITEM_ID);
         mItem = StoredItems.getInstance(getContext()).getItem(itemId);
+        mDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
     }
 
     @Override
@@ -44,26 +50,16 @@ public class ItemDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
         // TODO: 4/2/2017 Add a button that will add the item to the shopping list 
 
-        mTitle = (TextView) v.findViewById(R.id.item_title);
-        mExpireDate = (TextView) v.findViewById(R.id.item_expire_date_text);
-        mPurchaseDate = (TextView) v.findViewById(R.id.item_purchase_date_text);
-        mLocation = (TextView) v.findViewById(R.id.item_location_text);
-        mQuantity = (TextView) v.findViewById(R.id.item_quantity_text);
+        findViewsById(v);
+        updateUI();
 
-        mTitle.setText(mItem.getName());
-        // TODO: 3/2/17 get better date formatting
-        // TODO: 3/2/17 change to string resource with insert formatting
-        mExpireDate.setText(mItem.getExpirationDate().toString());
-        mPurchaseDate.setText(mItem.getPurchaseDate().toString());
-        mLocation.setText(mItem.getLocation());
-        mQuantity.setText(String.valueOf(mItem.getQuantity()));
 
-        mEditButton = (Button) v.findViewById(R.id.item_detail_edit_button);
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent editIntent = new Intent(getActivity(), ItemEditActivity.class);
-                startActivity(editIntent);
+                editIntent.putExtra(ItemEditActivity.ITEM_ID, mItem.getId());
+                startActivityForResult(editIntent, REQUEST_EDIT_ITEM);
             }
         });
         
@@ -81,6 +77,43 @@ public class ItemDetailFragment extends Fragment {
         });
         
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        // TODO: 3/3/17 change from if else to switch case for handling requests
+        switch (requestCode) {
+            case REQUEST_EDIT_ITEM:
+                updateUI();
+                break;
+            default:
+                updateUI();
+                break;
+        }
+    }
+
+    private void findViewsById(View v) {
+        mTitle = (TextView) v.findViewById(R.id.item_title);
+        mExpireDate = (TextView) v.findViewById(R.id.item_expire_date_text);
+        mPurchaseDate = (TextView) v.findViewById(R.id.item_purchase_date_text);
+        mLocation = (TextView) v.findViewById(R.id.item_location_text);
+        mQuantity = (TextView) v.findViewById(R.id.item_quantity_text);
+        mEditButton = (Button) v.findViewById(R.id.item_detail_edit_button);
+    }
+
+    private void updateUI() {
+        mItem = StoredItems.getInstance(getContext()).getItem(mItem.getId());
+        mTitle.setText(mItem.getName());
+        // TODO: 3/2/17 get better date formatting
+        // TODO: 3/2/17 change to string resource with insert formatting
+        mExpireDate.setText(mDateFormat.format(mItem.getExpirationDate()));
+        mPurchaseDate.setText(mDateFormat.format(mItem.getPurchaseDate()));
+        mLocation.setText(mItem.getLocation());
+        mQuantity.setText(String.valueOf(mItem.getQuantity()));
     }
 
     private void showToast(String string) {

@@ -20,6 +20,7 @@ public class ItemListFragment extends Fragment {
 
     private static final int REQUEST_OPTION = 0;
     private static final int REQUEST_NEW_ITEM = 1;
+    private static final int REQUEST_ITEM_DETAIL = 2;
     private static final String DIALOG_OPTION = "option";
     private RecyclerView mRecyclerView;
     private ItemAdapter mItemAdapter;
@@ -32,7 +33,20 @@ public class ItemListFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+        View view = inflater.inflate(R.layout.fragment_items_list, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.items_list_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        updateUI();
+
+        return view;
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        updateUI();
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -46,22 +60,13 @@ public class ItemListFragment extends Fragment {
                 break;
             case REQUEST_NEW_ITEM:
                 updateUI();
+                break;
+            case REQUEST_ITEM_DETAIL:
+                updateUI();
             default:
                 updateUI();
                 break;
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
-        View view = inflater.inflate(R.layout.fragment_items_list, container, false);
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.items_list_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        
-        updateUI();
-
-        return view;
     }
 
     @Override
@@ -176,7 +181,7 @@ public class ItemListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId());
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_ITEM_DETAIL);
         }
     }
 

@@ -38,11 +38,11 @@ public class ItemListActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
-        // TODO: 4/3/2017 Change hardcoded strings to locations from database
         mLocations = StoredItems.getInstance(this).getLocations();
         mLocations.add(0, getString(R.string.all));
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        // TODO: 4/29/2017 add shopping list to the sidebar layout
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mLocations);
         mDrawerList.setAdapter(mAdapter);
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -50,6 +50,7 @@ public class ItemListActivity extends SingleFragmentActivity {
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 ItemListFragment f = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 f.filterListByLocation(mLocations.get(pos));
+                mDrawerLayout.closeDrawers();
             }
         });
 

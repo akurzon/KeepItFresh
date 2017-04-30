@@ -1,8 +1,12 @@
 package com.csci448.freshapps.keepitfresh;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -88,6 +92,7 @@ public class ItemListFragment extends Fragment {
                 startActivityForResult(newItemIntent, REQUEST_NEW_ITEM);
                 return true;
             case R.id.menu_item_shopping_list:
+                // TODO: 4/29/2017 remove the shopping list from this menu, add to hamburger 
                 Intent shoppingIntent = new Intent(getActivity(), ShoppingListActivity.class);
                 startActivity(shoppingIntent);
                 return true;
@@ -129,6 +134,7 @@ public class ItemListFragment extends Fragment {
         if (mItemAdapter == null) {
             mItemAdapter = new ItemAdapter(items);
             mRecyclerView.setAdapter(mItemAdapter);
+            mRecyclerView.addItemDecoration(new RecyclerViewDivider(getActivity()));
         }
         else {
             mItemAdapter.updateItems(items);
@@ -147,8 +153,9 @@ public class ItemListFragment extends Fragment {
         }
         mItemAdapter.updateItems(items);
     }
-
+    
     private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        // TODO: 4/29/2017 change this view to look better and have more detail; use list_item_grocery_item.xml
         private TextView mItemNameTextView;
         private TextView mExpireDateTextView;
         private TextView mPurchaseDateTextView;
@@ -171,8 +178,6 @@ public class ItemListFragment extends Fragment {
         public void bindItem(Item item) {
             mItem = item;
             mItemNameTextView.setText(mItem.getName());
-            // TODO: 3/2/17 get better date formatting
-            // TODO: 3/2/17 change to string resource with insert formatting
             mExpireDateTextView.setText(getResources().getString(R.string.expire_date_label,
                     mDateFormat.format(mItem.getExpirationDate())));
             mPurchaseDateTextView.setText(getResources().getString(R.string.purchase_date_label,
@@ -217,5 +222,37 @@ public class ItemListFragment extends Fragment {
             notifyDataSetChanged();
         }
 
+    }
+
+    /**
+     * This class adds a divider to the recycler view in between items
+     *
+     * This helps visibility, and makes items look distinct from each other
+     */
+    private class RecyclerViewDivider extends RecyclerView.ItemDecoration {
+        private Drawable mDivider;
+
+        public RecyclerViewDivider(Context context) {
+            mDivider = ContextCompat.getDrawable(context, R.drawable.line_divider);
+        }
+
+        @Override
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
+        }
     }
 }

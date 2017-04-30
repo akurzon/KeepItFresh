@@ -54,6 +54,7 @@ public class ItemListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         updateUI();
         if (resultCode != Activity.RESULT_OK) {
+            updateUI();
             return;
         }
 
@@ -84,10 +85,10 @@ public class ItemListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch ((item.getItemId())) {
             case R.id.menu_item_new_item:
-                Item newItem = new Item();
-                StoredItems.getInstance(getContext()).addItem(newItem);
+//                Item newItem = new Item();
+//                StoredItems.getInstance(getContext()).addItem(newItem);
                 Intent newItemIntent = ItemEditActivity.newIntent(
-                        getActivity(), newItem.getId(), true);
+                        getActivity(), null, true);
                 startActivityForResult(newItemIntent, REQUEST_NEW_ITEM);
                 return true;
             case R.id.menu_item_shopping_list:

@@ -260,6 +260,7 @@ public class StoredItems {
     private List<Item> filterByLocation(List<Item> items, String location) {
         ArrayList<Item> filteredItems = new ArrayList<>();
         for (Item item : items) {
+            if (item.getLocation() == null) continue;
             if (item.getLocation().equals(location)) {
                 filteredItems.add(item);
             }

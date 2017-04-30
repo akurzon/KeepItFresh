@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +28,8 @@ public class ItemListFragment extends Fragment {
     private ItemAdapter mItemAdapter;
     private SortOptions mSortOption = SortOptions.EXPIRE;
     private SimpleDateFormat mDateFormat;
+    private String mLocation = "all";
+    private List<Item> mItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,41 +114,42 @@ public class ItemListFragment extends Fragment {
 
     public void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(getContext());
-        List<Item> items;
+//        List<Item> items;
         switch (mSortOption) {
             case EXPIRE:
-                items = storedItems.sortByExpirationDate(ItemType.STORED);
+                mItems = storedItems.sortByExpirationDate(ItemType.STORED, mLocation);
                 break;
             case NAME:
-                items = storedItems.sortByName(ItemType.STORED);
+                mItems = storedItems.sortByName(ItemType.STORED, mLocation);
                 break;
             case PURCHASE:
-                items = storedItems.sortByPurchaseDate(ItemType.STORED);
+                mItems = storedItems.sortByPurchaseDate(ItemType.STORED, mLocation);
                 break;
             default:
-                items = storedItems.sortByExpirationDate(ItemType.STORED);
+                mItems = storedItems.sortByExpirationDate(ItemType.STORED, mLocation);
         }
 
         if (mItemAdapter == null) {
-            mItemAdapter = new ItemAdapter(items);
+            mItemAdapter = new ItemAdapter(mItems);
             mRecyclerView.setAdapter(mItemAdapter);
         }
         else {
-            mItemAdapter.updateItems(items);
+            mItemAdapter.updateItems(mItems);
             mItemAdapter.notifyDataSetChanged();
         }
     }
 
     public void filterListByLocation(String location) {
         //if the string is equal to R.string.all ("All") then we want to show all items
-        List<Item> items;
+        mLocation = location;
         if (location.equals(getString(R.string.all))) {
-            items = StoredItems.getInstance(getActivity()).getItemList();
+            mItems = StoredItems.getInstance(getActivity()).getItemList();
+//            StoredItems.getInstance(getActivity()).sortByExpirationDate(ItemType.STORED);
         }
         else {
-            items = StoredItems.getInstance(getActivity()).getItemsFromLocation(location);
+            mItems = StoredItems.getInstance(getActivity()).getItemsFromLocation(location);
         }
-        mItemAdapter.updateItems(items);
+        mItemAdapter.updateItems(mItems);
     }
 
     private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -180,7 +184,8 @@ public class ItemListFragment extends Fragment {
         }
         @Override
         public void onClick(View v) {
-            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(), mSortOption);
+            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(),
+                    (ArrayList<Item>) mItems);
             startActivityForResult(intent, REQUEST_ITEM_DETAIL);
         }
 

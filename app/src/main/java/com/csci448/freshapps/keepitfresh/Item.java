@@ -1,17 +1,61 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 
-public class Item {
+public class Item implements Parcelable {
     private UUID mId;
     private String mName;
     private Date mExpirationDate, mPurchaseDate;
     private int mQuantity;
     private String mLocation;
     private boolean mOnShoppingList, mIsChecked;
+
+    protected Item(Parcel in) {
+        mId = UUID.fromString(in.readString());
+        mName = in.readString();
+        mExpirationDate = new Date(in.readLong());
+        mPurchaseDate = new Date(in.readLong());
+        mQuantity = in.readInt();
+        mLocation = in.readString();
+        mOnShoppingList = in.readByte() != 0;
+        mIsChecked = in.readByte() != 0;
+    }
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId.toString());
+        dest.writeString(mName);
+        dest.writeLong(mExpirationDate.getTime());
+        dest.writeLong(mPurchaseDate.getTime());
+        dest.writeInt(mQuantity);
+        dest.writeString(mLocation);
+        dest.writeByte((byte) (mOnShoppingList ? 1 : 0));
+        dest.writeByte((byte) (mIsChecked ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return this.hashCode();
+    }
 
     public int getQuantity() {
         return mQuantity;
@@ -41,10 +85,10 @@ public class Item {
         return mIsChecked;
     }
 
+
     public void setChecked(boolean checked) {
         mIsChecked = checked;
     }
-
 
     public Item() {
         mName = "";
@@ -56,7 +100,6 @@ public class Item {
         mIsChecked = false;
         mId = UUID.randomUUID();
     }
-
     public Item(UUID id) {
 //        this("");
         mName = "";
@@ -69,6 +112,7 @@ public class Item {
         mId = id;
 
     }
+
     /**
      * constructor will set default values for everything other than mName
      * @param name is the item mName

@@ -1,19 +1,24 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -25,8 +30,8 @@ public class ItemListActivity extends SingleFragmentActivity {
     private DrawerLayout mDrawerLayout;
 
     private String mActivityTitle;
-    //private String[] mLocations = new String[4];
     private List<String> mLocations;
+    private List<String> mStores;
 
     @Override
     protected Fragment createFragment() {
@@ -41,7 +46,15 @@ public class ItemListActivity extends SingleFragmentActivity {
         mLocations = StoredItems.getInstance(this).getLocations();
         mLocations.add(0, getString(R.string.all));
 
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        //mStores = new LinkedList<String>();
+        //mStores.add(0, getString(R.string.all));
+
+        /**
+         * This code was for the listview in Beta release. We are replacing it with a navigation drawer
+         * to support the shopping list being added here.
+         */
+        /*
+        mDrawerList = (ListView) findViewById(R.id.stored_drawer);
         // TODO: 4/29/2017 add shopping list to the sidebar layout
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mLocations);
         mDrawerList.setAdapter(mAdapter);
@@ -51,6 +64,47 @@ public class ItemListActivity extends SingleFragmentActivity {
                 ItemListFragment f = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 f.filterListByLocation(mLocations.get(pos));
                 mDrawerLayout.closeDrawers();
+            }
+        });
+        */
+
+        /**
+         * This code is for the Navigation drawer
+         */
+        final NavigationView navView = (NavigationView) findViewById(R.id.main_navigation);
+        Menu menu = navView.getMenu();
+        SubMenu storedLocations = menu.addSubMenu("Stored Food");
+        for (String location : mLocations) {
+            storedLocations.add(location);
+        }
+        SubMenu stores = menu.addSubMenu("Shopping Lists");
+        //for now stores is does not have sub categories
+//        for (String store : mStores) {
+//            stores.add(store);
+//        }
+        stores.add(getString(R.string.shopping_list));
+
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                //check if the menu item hit was the shopping list
+                if (menuItem.getTitle() == getString(R.string.shopping_list)) {
+                    Intent shoppingIntent = new Intent(navView.getContext(), ShoppingListActivity.class);
+                    startActivity(shoppingIntent);
+                }
+                else {
+                    ItemListFragment f = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    //find the item that we want to filter by
+                    for (String location : mLocations) {
+                        if (menuItem.getTitle() == location) {
+                            f.filterListByLocation(location);
+                            break;
+                        }
+                    }
+                }
+
+                mDrawerLayout.closeDrawers();
+                return true;
             }
         });
 

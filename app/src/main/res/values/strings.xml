@@ -50,4 +50,6 @@
     <string name="submit">submit</string>
     <string name="edit_item">Edit Item</string>
     <string name="button_delete_item">delete</string>
+    <string name="stored">Stored Food</string>
+    <string name="shopping_lists">Shopping Lists</string>
 </resources>

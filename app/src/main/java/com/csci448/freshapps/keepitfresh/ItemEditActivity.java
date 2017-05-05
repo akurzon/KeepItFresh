@@ -80,9 +80,8 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     public static Intent newIntent(Context context, UUID itemId, boolean isNewItem) {
         Intent intent = new Intent(context, ItemEditActivity.class);
         intent.putExtra(EXTRA_NEW_ITEM, isNewItem);
-        if (isNewItem) {
-            intent.putExtra(EXTRA_ITEM_ID, itemId);
-        }
+        intent.putExtra(EXTRA_ITEM_ID, itemId);
+
         return intent;
     }
 

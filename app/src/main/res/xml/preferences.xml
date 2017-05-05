@@ -22,5 +22,11 @@
         android:defaultValue="@string/pref_item_location_default"
         />
 
+    <EditTextPreference
+        android:key="pref_choose_notification_threshold"
+        android:title="@string/pref_choose_notification_threshold"
+        android:inputType="number"
+        android:defaultValue="1"
+        />
 
 </PreferenceScreen>

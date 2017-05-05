@@ -38,6 +38,8 @@ public class ItemListActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
+        ExpirationService.setServiceAlarm(this, true);
+
         // TODO: 4/3/2017 Change hardcoded strings to locations from database
         mLocations = StoredItems.getInstance(this).getLocations();
         mLocations.add(0, getString(R.string.all));

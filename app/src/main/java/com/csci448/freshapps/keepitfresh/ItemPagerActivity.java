@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,15 +20,30 @@ import java.util.UUID;
 public class ItemPagerActivity extends AppCompatActivity {
     private static final String EXTRA_ITEM_ID = "item_id";
     private static final String EXTRA_SORT_OPTION = "sort_option";
+    private static final String EXTRA_ITEM_LIST = "item_list";
+    private static final String EXTRA_LOCATION = "location";
 
     private ViewPager mViewPager;
     private List<Item> mItems;
     private SortOptions mSortOption;
+    private String mLocation;
 
-    public static Intent newIntent(Context context, UUID itemId, SortOptions sortOption) {
+    public static Intent newIntent(Context context, UUID itemId,
+                                   ArrayList<Item> items) {
+        Intent intent = new Intent(context, ItemPagerActivity.class);
+        intent.putExtra(EXTRA_ITEM_ID, itemId);
+        intent.putExtra(EXTRA_ITEM_LIST, items);
+
+        return intent;
+    }
+
+    public static Intent newIntent(Context context, UUID itemId, SortOptions sortOption,
+                                   String location) {
         Intent intent = new Intent(context, ItemPagerActivity.class);
         intent.putExtra(EXTRA_ITEM_ID, itemId);
         intent.putExtra(EXTRA_SORT_OPTION, sortOption);
+        intent.putExtra(EXTRA_LOCATION, location);
+
         return intent;
     }
 
@@ -37,21 +53,22 @@ public class ItemPagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_pager);
 
         UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
-        mSortOption = (SortOptions)getIntent().getSerializableExtra(EXTRA_SORT_OPTION);
-
+        mItems = getIntent().getParcelableArrayListExtra(EXTRA_ITEM_LIST);
+//        mSortOption = (SortOptions)getIntent().getSerializableExtra(EXTRA_SORT_OPTION);
+//        mLocation = getIntent().getStringExtra(EXTRA_LOCATION);
         mViewPager = (ViewPager) findViewById(R.id.activity_item_pager_view_pager);
 
-        switch (mSortOption) {
-            case EXPIRE:
-                mItems = StoredItems.getInstance(this).sortByExpirationDate(ItemType.STORED);
-                break;
-            case NAME:
-                mItems = StoredItems.getInstance(this).sortByName(ItemType.STORED);
-                break;
-            case PURCHASE:
-                mItems = StoredItems.getInstance(this).sortByPurchaseDate(ItemType.STORED);
-                break;
-        }
+//        switch (mSortOption) {
+//            case EXPIRE:
+//                mItems = StoredItems.getInstance(this).sortByExpirationDate(ItemType.STORED);
+//                break;
+//            case NAME:
+//                mItems = StoredItems.getInstance(this).sortByName(ItemType.STORED);
+//                break;
+//            case PURCHASE:
+//                mItems = StoredItems.getInstance(this).sortByPurchaseDate(ItemType.STORED);
+//                break;
+//        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {

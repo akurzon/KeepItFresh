@@ -10,10 +10,8 @@ import com.csci448.freshapps.keepitfresh.database.ItemDbHelper;
 import com.csci448.freshapps.keepitfresh.database.ItemDbSchema;
 import com.csci448.freshapps.keepitfresh.database.LocationCursorWrapper;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public class StoredItems {
@@ -227,7 +225,7 @@ public class StoredItems {
         return new ItemCursorWrapper(cursor);
     }
 
-    private List<Item> sortBy(ItemType type, String sortCol) {
+    private List<Item> sortBy(ItemType type, String sortCol, String location) {
         List<Item> sortedList = new ArrayList<>();
         String orderBy = sortCol;
         String whereClause;
@@ -235,15 +233,10 @@ public class StoredItems {
 
         // TODO: 4/3/17 figure out why using whereArgs breaks the query
         if (type.equals(ItemType.CART)) {
-//            whereClause = "onShoppingList = ?";
-//            whereArgs = new String[] {"1"};
             whereClause = "onShoppingList = 1";
             whereArgs = null;
         }
         else {
-//            whereClause = "quantity > ?";
-//            whereArgs = new String[] {"0"};
-
             whereClause = "quantity > 0";
             whereArgs = null;
 
@@ -257,19 +250,34 @@ public class StoredItems {
         }
         cursor.close();
 
+        if (!location.equals("all")) {
+            return filterByLocation(sortedList, location);
+        }
+
         return sortedList;
     }
 
-    public List<Item> sortByName(ItemType type) {
-        return sortBy(type, "name");
+    private List<Item> filterByLocation(List<Item> items, String location) {
+        ArrayList<Item> filteredItems = new ArrayList<>();
+        for (Item item : items) {
+            if (item.getLocation() == null) continue;
+            if (item.getLocation().equals(location)) {
+                filteredItems.add(item);
+            }
+        }
+        return filteredItems;
     }
 
-    public List<Item> sortByExpirationDate(ItemType type) {
-        return sortBy(type, "expirationDate");
+    public List<Item> sortByName(ItemType type, String location) {
+        return sortBy(type, "name", location);
     }
 
-    public List<Item> sortByPurchaseDate(ItemType type) {
-        return sortBy(type, "purchaseDate");
+    public List<Item> sortByExpirationDate(ItemType type, String location) {
+        return sortBy(type, "expirationDate", location);
+    }
+
+    public List<Item> sortByPurchaseDate(ItemType type, String location) {
+        return sortBy(type, "purchaseDate", location);
     }
 
     public List<Item> getItemsFromLocation(String location) {

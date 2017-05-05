@@ -47,9 +47,15 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(bunduru);
         setTitle(R.string.edit_item);
         mStoredItems = StoredItems.getInstance(getApplicationContext());
-        UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
         mIsNewItem = getIntent().getBooleanExtra(EXTRA_NEW_ITEM, false);
-        mItem = mStoredItems.getItem(itemId);
+        UUID itemId;
+        if (mIsNewItem) {
+            mItem = new Item();
+        }
+        else {
+            itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
+            mItem = mStoredItems.getItem(itemId);
+        }
         setContentView(R.layout.activity_edit_item);
         findViewsById();
 
@@ -62,6 +68,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         setupListeners();
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -72,8 +79,10 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
 
     public static Intent newIntent(Context context, UUID itemId, boolean isNewItem) {
         Intent intent = new Intent(context, ItemEditActivity.class);
-        intent.putExtra(EXTRA_ITEM_ID, itemId);
         intent.putExtra(EXTRA_NEW_ITEM, isNewItem);
+        if (isNewItem) {
+            intent.putExtra(EXTRA_ITEM_ID, itemId);
+        }
         return intent;
     }
 
@@ -108,6 +117,10 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 // TODO: 4/3/17 set booleans for item
 
                 mItemSaved = true;
+                if (mIsNewItem) {
+                    mStoredItems.addItem(mItem);
+                    mIsNewItem = false;
+                }
                 mStoredItems.updateItem(mItem);
                 setResult(RESULT_OK);
                 finish();
@@ -173,7 +186,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         Button setButton = (Button) mNumberPickerDialog.findViewById(R.id.button_set);
         final NumberPicker picker = (NumberPicker) mNumberPickerDialog.findViewById(R.id.quantity_picker);
         picker.setMaxValue(100);
-        picker.setMinValue(0);
+        picker.setMinValue(1);
         picker.setWrapSelectorWheel(false);
         //picker.setOnValueChangedListener(NumberPicker.OnValueChangeListener());
 

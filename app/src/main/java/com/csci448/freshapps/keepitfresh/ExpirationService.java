@@ -2,15 +2,21 @@ package com.csci448.freshapps.keepitfresh;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -23,6 +29,8 @@ public class ExpirationService extends IntentService {
 
     private static final long DAY_IN_MS = 1000 * 60 * 60 * 24;
     private static final long POLL_INTERVAL = AlarmManager.INTERVAL_DAY;
+
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("MMMM dd", Locale.US);
 
     public ExpirationService() {
         super("ExpirationService");
@@ -46,12 +54,50 @@ public class ExpirationService extends IntentService {
                     StoredItems.getInstance(getApplicationContext()).getItemList();
             ArrayList<Item> expiredItems = fetchExpiredItems(items);
 
+            if (expiredItems.isEmpty()) {
+                return;
+            }
 
+            Intent i = ItemListActivity.newIntent(this);
+            PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
 
-            for (Item expiredItem : expiredItems) {
-                // TODO: 5/4/17 make a notification for your expired items
+            String notificationMessage = "";
+            if (expiredItems.size() == 1) {
+                notificationMessage = "One item expiring soon\n" +
+                        expiredItems.get(0).getName() +
+                        mDateFormat.format(expiredItems.get(0).getExpirationDate());
+            }
+            else {
+                notificationMessage += expiredItems.size() + "items expiring soon";
+                    notificationMessage += "\n" + expiredItems.get(0).getName() + "and " +
+                            (expiredItems.size() - 1) + " others";
+            }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setTicker(getResources().getString(R.string.expired_items_title))
+                    .setSmallIcon(R.drawable.ic_expire_notification)
+                    .setContentTitle(getResources().getString(R.string.expired_items_title))
+                    .setContentText(notificationMessage)
+                    .setContentIntent(pi)
+                    .setAutoCancel(true);
+
+            // handle app version to check if we can set an expanded layout style to notification
+            if (Build.VERSION.SDK_INT > 4.1) {
+                NotificationCompat.InboxStyle inboxStyle =
+                        new NotificationCompat.InboxStyle();
+                inboxStyle.setBigContentTitle(getResources().getString(R.string.expired_items_title));
+
+                for (Item expiredItem : expiredItems) {
+                    inboxStyle.addLine(expiredItem.getName()+ ": "
+                            + mDateFormat.format(expiredItem.getExpirationDate()));
+                }
+                builder.setStyle(inboxStyle);
 
             }
+            Notification notification = builder.build();
+            NotificationManagerCompat notificationManager =
+                    NotificationManagerCompat.from(this);
+            notificationManager.notify(0, notification);
         }
     }
 

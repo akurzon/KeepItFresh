@@ -1,5 +1,7 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -27,6 +29,8 @@ public class ItemListActivity extends SingleFragmentActivity {
     private String mActivityTitle;
     //private String[] mLocations = new String[4];
     private List<String> mLocations;
+
+
 
     @Override
     protected Fragment createFragment() {
@@ -110,6 +114,11 @@ public class ItemListActivity extends SingleFragmentActivity {
     public void onConfigurationChanged(Configuration config) {
         super.onConfigurationChanged(config);
         mDrawerToggle.onConfigurationChanged(config);
+    }
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, ItemListActivity.class);
+
     }
 
     /**

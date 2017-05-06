@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
-        android:key="pref_move_expired_items_to_cart"
-        android:title="@string/pref_move_expired_items_to_cart"
-        android:defaultValue="true"
+        android:key="pref_toggle_notifications"
+        android:title="@string/toggle_notifications"
+        android:summary="@string/toggle_notifications_summ"
+
         />
     <EditTextPreference
         android:key="pref_choose_notification_threshold"
@@ -12,6 +13,13 @@
         android:summary="@string/pref_choose_notification_summ"
         android:inputType="number"
         android:defaultValue="1"
+        android:dependency="pref_toggle_notifications"
+        />
+    <CheckBoxPreference
+        android:key="pref_move_expired_items_to_cart"
+        android:title="@string/pref_move_expired_items_to_cart"
+        android:summary="@string/pref_move_expired_items_to_cart_summ"
+        android:defaultValue="true"
         />
     <CheckBoxPreference
         android:key="pref_save_to_default"
@@ -28,4 +36,10 @@
         android:entryValues="@array/pref_item_location_values"
         android:defaultValue="@string/pref_item_location_default"
         />
+
+    <Preference
+        android:key="pref_clear_history"
+        android:title="@string/pref_clear_history"
+        />
+
 </PreferenceScreen>

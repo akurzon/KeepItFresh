@@ -8,9 +8,7 @@
         to the default location you choose, rather than asking where to put it.</string>
     <string name="pref_choose_default">Choose the default location</string>
     <string name="pref_item_location_default">1</string>
-    <string name="pref_move_expired_items_to_cart">Expired items go to the shopping list</string>
-    <string name="pref_move_expired_items_to_cart_summ">When an item expires, it will automatically
-        appear in your shopping list.</string>
+    <string name="pref_move_expired_items_to_cart">Deleting an expired item moves it to the shopping list</string>
     <string name="sort_by_name">name</string>
     <string name="sort_by_expire_date">Expiration Date</string>
     <string name="sort_by_purchase_date">Purchase Date</string>
@@ -50,6 +48,9 @@
     <string name="submit">submit</string>
     <string name="edit_item">Edit Item</string>
     <string name="button_delete_item">delete</string>
-    <string name="pref_choose_notification_threshold">Choose when to be reminded of expired food</string>
+    <string name="pref_choose_notification_threshold">Notification Threshold</string>
+    <string name="pref_choose_notification_summ">
+        Choose how soon you want to be notified before an item expires</string>
     <string name="expired_items_title">Item(s) about to expire</string>
+    <string name="pref_choose_notification_dialog">Number of days before expiration</string>
 </resources>

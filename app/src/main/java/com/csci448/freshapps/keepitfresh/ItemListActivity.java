@@ -1,5 +1,6 @@
 package com.csci448.freshapps.keepitfresh;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
@@ -33,6 +34,8 @@ public class ItemListActivity extends SingleFragmentActivity {
     private List<String> mLocations;
     private List<String> mStores;
 
+
+
     @Override
     protected Fragment createFragment() {
         return new ItemListFragment();
@@ -43,6 +46,9 @@ public class ItemListActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
+        ExpirationService.setServiceAlarm(this);
+
+        // TODO: 4/3/2017 Change hardcoded strings to locations from database
         mLocations = StoredItems.getInstance(this).getLocations();
         mLocations.add(0, getString(R.string.all));
 
@@ -163,6 +169,11 @@ public class ItemListActivity extends SingleFragmentActivity {
     public void onConfigurationChanged(Configuration config) {
         super.onConfigurationChanged(config);
         mDrawerToggle.onConfigurationChanged(config);
+    }
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, ItemListActivity.class);
+
     }
 
     /**

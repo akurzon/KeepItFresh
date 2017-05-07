@@ -8,9 +8,10 @@
         to the default location you choose, rather than asking where to put it.</string>
     <string name="pref_choose_default">Choose the default location</string>
     <string name="pref_item_location_default">1</string>
-    <string name="pref_move_expired_items_to_cart">Expired items go to the shopping list</string>
-    <string name="pref_move_expired_items_to_cart_summ">When an item expires, it will automatically
-        appear in your shopping list.</string>
+    <string name="pref_move_expired_items_to_cart">Expired items move to shopping list</string>
+    <string name="pref_move_expired_items_to_cart_summ">
+        Deleting an expired item automatically moves it to the shopping list
+    </string>
     <string name="sort_by_name">name</string>
     <string name="sort_by_expire_date">Expiration Date</string>
     <string name="sort_by_purchase_date">Purchase Date</string>
@@ -52,4 +53,14 @@
     <string name="button_delete_item">delete</string>
     <string name="stored">Stored Food</string>
     <string name="shopping_lists">Shopping Lists</string>
+    <string name="pref_choose_notification_threshold">Notification Threshold</string>
+    <string name="pref_choose_notification_summ">
+        Choose how soon you want to be notified before an item expires</string>
+    <string name="expired_items_title">Item(s) about to expire</string>
+    <string name="pref_choose_notification_dialog">Number of days before expiration</string>
+    <string name="pref_clear_history">Clear History</string>
+    <string name="toggle_notifications">Notifications</string>
+    <string name="toggle_notifications_summ">Get notified when an item is about to expire</string>
+    <string name="confirm_clear_history">Are you sure you want to clear the information stored in this app?</string>
+    <string name="ok">OK</string>
 </resources>

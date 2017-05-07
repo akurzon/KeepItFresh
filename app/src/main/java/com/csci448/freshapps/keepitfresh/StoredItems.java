@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import com.csci448.freshapps.keepitfresh.database.ItemCursorWrapper;
 import com.csci448.freshapps.keepitfresh.database.ItemDbHelper;
@@ -294,4 +295,9 @@ public class StoredItems {
         return items;
     }
 
+    public void clearHistory() {
+        Toast.makeText(mContext, "everything is gone", Toast.LENGTH_SHORT).show();
+        // TODO: 5/6/17 uncomment for final release
+        // mDatabase.delete(ItemDbSchema.ItemTable.NAME, null, null);
+    }
 }

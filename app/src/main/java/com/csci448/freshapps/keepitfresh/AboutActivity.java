@@ -15,4 +15,9 @@ public class AboutActivity extends SingleFragmentActivity {
         return new AboutFragment();
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 }

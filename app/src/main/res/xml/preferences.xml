@@ -4,7 +4,7 @@
         android:key="pref_toggle_notifications"
         android:title="@string/toggle_notifications"
         android:summary="@string/toggle_notifications_summ"
-
+        android:defaultValue="true"
         />
     <EditTextPreference
         android:key="pref_choose_notification_threshold"

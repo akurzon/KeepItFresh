@@ -10,11 +10,14 @@ import java.util.UUID;
 
 
 public class Item implements Parcelable {
+    private static final long DAY_IN_MS = 1000 * 60 * 60 * 24;
+
     private UUID mId;
     private String mName;
     private Date mExpirationDate, mPurchaseDate;
     private int mQuantity;
     private String mLocation;
+
     private boolean mOnShoppingList, mIsChecked;
 
     protected Item(Parcel in) {
@@ -188,5 +191,13 @@ public class Item implements Parcelable {
 
         calendar.setTimeInMillis(randomTime);
         return calendar.getTime();
+    }
+
+    public boolean isExpired() {
+        return mExpirationDate.getTime() < new Date().getTime();
+    }
+
+    public boolean expiresInDays(int days) {
+        return mExpirationDate.getTime() < new Date().getTime() + days * DAY_IN_MS;
     }
 }

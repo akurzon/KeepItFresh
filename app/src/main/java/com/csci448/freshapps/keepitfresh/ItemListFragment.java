@@ -3,7 +3,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -29,7 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ItemListFragment extends Fragment {
-    private static final String TAG = "ItemListFramgent";
+    private static final String TAG = "ItemListFragment";
 
     private static final int REQUEST_OPTION = 0;
     private static final int REQUEST_NEW_ITEM = 1;
@@ -55,6 +57,11 @@ public class ItemListFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.items_list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        Drawable divider = ContextCompat.getDrawable(getActivity(), R.drawable.bar_divider);
+
+        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(divider);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         updateUI();
 
@@ -276,6 +283,18 @@ public class ItemListFragment extends Fragment {
         @Override
         public void onBindViewHolder(ItemHolder holder, int position) {
             Item item = mItems.get(position);
+
+            if (item.isExpired()) {
+                holder.itemView.setBackgroundResource(R.color.itemExpired);
+            }
+            else if (item.expiresInDays(1)) {
+                holder.itemView.setBackgroundResource(R.color.itemExpiresSoon1);
+            }
+            else if (item.expiresInDays(3)) {
+                holder.itemView.setBackgroundResource(R.color.itemExpiresSoon2);
+
+            }
+
             holder.bindItem(item);
         }
 

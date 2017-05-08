@@ -22,6 +22,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
+/**
+ * Most of the code in here is going to become obsolete. We are moving all this functionality to the detail.
+ */
 public class ItemEditActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String EXTRA_ITEM_ID = "item_id";
@@ -37,6 +40,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     private DatePickerDialog mExpireDatePickerDialog, mPurchaseDatePickerDialog;
     private Dialog mNumberPickerDialog;
     private SimpleDateFormat mDateFormat;
+
     private Item mItem;
     private StoredItems mStoredItems;
     private boolean mItemSaved = false;
@@ -67,7 +71,6 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         setupLocationSpinner();
         setupListeners();
     }
-
 
     @Override
     protected void onStop() {

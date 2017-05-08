@@ -20,14 +20,4 @@
         app:headerLayout="@layout/navigation_header"
         app:menu="@menu/navigation_menu" />
 
-    <!--
-    Old code, might not use
-    <ListView
-        android:id="@+id/stored_drawer"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:background="#ffeeeeee"/>
-    -->
-
 </android.support.v4.widget.DrawerLayout>

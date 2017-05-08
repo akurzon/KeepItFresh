@@ -22,17 +22,20 @@ public class ItemPagerActivity extends AppCompatActivity {
     private static final String EXTRA_SORT_OPTION = "sort_option";
     private static final String EXTRA_ITEM_LIST = "item_list";
     private static final String EXTRA_LOCATION = "location";
+    private static final String EXTRA_NEW_ITEM = "new_item";
 
     private ViewPager mViewPager;
     private List<Item> mItems;
     private SortOptions mSortOption;
     private String mLocation;
+    private boolean mIsNewItem;
 
     public static Intent newIntent(Context context, UUID itemId,
-                                   ArrayList<Item> items) {
+                                   ArrayList<Item> items, boolean isNewItem) {
         Intent intent = new Intent(context, ItemPagerActivity.class);
         intent.putExtra(EXTRA_ITEM_ID, itemId);
         intent.putExtra(EXTRA_ITEM_LIST, items);
+        intent.putExtra(EXTRA_NEW_ITEM, isNewItem);
 
         return intent;
     }
@@ -52,7 +55,9 @@ public class ItemPagerActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_item_pager);
 
+        //this could be null, if we are calling a new item to be made
         UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
+        mIsNewItem = (boolean) getIntent().getSerializableExtra(EXTRA_NEW_ITEM);
         mItems = getIntent().getParcelableArrayListExtra(EXTRA_ITEM_LIST);
 //        mSortOption = (SortOptions)getIntent().getSerializableExtra(EXTRA_SORT_OPTION);
 //        mLocation = getIntent().getStringExtra(EXTRA_LOCATION);
@@ -71,24 +76,35 @@ public class ItemPagerActivity extends AppCompatActivity {
 //        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public Fragment getItem(int position) {
-                Item item = mItems.get(position);
-                return ItemDetailFragment.newInstance(item.getId());
-            }
+        /**
+         * If we are creating a new item, we don't want a pager, we just want to open a single item detail
+         */
+        if (!mIsNewItem) {
+            mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+                @Override
+                public Fragment getItem(int position) {
+                    Item item = mItems.get(position);
+                    return ItemDetailFragment.newInstance(item.getId());
+                }
 
-            @Override
-            public int getCount() {
-                return mItems.size();
-            }
-        });
+                @Override
+                public int getCount() {
+                    return mItems.size();
+                }
+            });
 
-        for (int i = 0; i < mItems.size(); i++) {
-            if (mItems.get(i).getId().equals(itemId)) {
-                mViewPager.setCurrentItem(i);
-                break;
+            for (int i = 0; i < mItems.size(); i++) {
+                if (mItems.get(i).getId().equals(itemId)) {
+                    mViewPager.setCurrentItem(i);
+                    break;
+                }
             }
+        }
+        else {
+            //creating a new item, so we use null item id from
+            fragmentManager.beginTransaction()
+                    .replace(android.R.id.content, ItemDetailFragment.newInstance(itemId))
+                    .commit();
         }
     }
 }

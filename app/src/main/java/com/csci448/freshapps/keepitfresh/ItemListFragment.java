@@ -91,14 +91,9 @@ public class ItemListFragment extends Fragment {
             case R.id.menu_item_new_item:
 //                Item newItem = new Item();
 //                StoredItems.getInstance(getContext()).addItem(newItem);
-                Intent newItemIntent = ItemEditActivity.newIntent(
-                        getActivity(), null, true);
+                Intent newItemIntent = ItemPagerActivity.newIntent(
+                        getActivity(), null, (ArrayList<Item>) mItems, true);
                 startActivityForResult(newItemIntent, REQUEST_NEW_ITEM);
-                return true;
-            case R.id.menu_item_shopping_list:
-                // TODO: 4/29/2017 remove the shopping list from this menu, add to hamburger 
-                Intent shoppingIntent = new Intent(getActivity(), ShoppingListActivity.class);
-                startActivity(shoppingIntent);
                 return true;
             case R.id.menu_item_sort_by:
                 SortOptionsDialogFragment dialog = new SortOptionsDialogFragment();
@@ -191,7 +186,7 @@ public class ItemListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(),
-                    (ArrayList<Item>) mItems);
+                    (ArrayList<Item>) mItems, false);
             startActivityForResult(intent, REQUEST_ITEM_DETAIL);
         }
 

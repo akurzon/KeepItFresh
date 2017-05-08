@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#65ED95</color>
+    <color name="colorPrimaryDark">#099E3D</color>
+    <color name="colorAccent">#41E0D0</color>
+    <!--I'm keeping this color cuz I like it-->
+    <color name="prettyPurple">#B02ED1</color>
     <color name="dark_gray">#808080</color>
 </resources>

@@ -12,6 +12,16 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:hint="@string/title_hint"/>
 
+    <TextView
+        android:id="@+id/detail_date_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_date_header"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:padding="@dimen/item_detail_padding"/>
+
+    <!-- Try to find an underline for the above textview -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,14 +33,17 @@
             android:id="@+id/edit_expiration_date_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_expiration_set"
+            android:text="@string/expiration_date"
+            android:textSize="@dimen/item_detail_text_view_size"
             android:textStyle="bold"
+            android:padding="@dimen/item_detail_padding"
             android:paddingEnd="16dp"/>
 
         <TextView
             android:id="@+id/expiration_date_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/item_detail_text_view_size"/>
     </LinearLayout>
 
     <LinearLayout
@@ -44,16 +57,30 @@
             android:id="@+id/edit_purchase_date_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/purchase_set"
+            android:text="@string/purchase_date"
+            android:textSize="@dimen/item_detail_text_view_size"
             android:textStyle="bold"
+            android:padding="@dimen/item_detail_padding"
             android:paddingEnd="16dp"/>
 
         <TextView
             android:id="@+id/purchase_date_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/item_detail_text_view_size"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/detail_quantity_location_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_details_header"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:padding="@dimen/item_detail_padding"/>
+
+    <!-- Try to find an underline for the above textview -->
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,14 +91,17 @@
             android:id="@+id/edit_quantity_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/quantity_set"
+            android:text="@string/quantity"
+            android:textSize="@dimen/item_detail_text_view_size"
             android:textStyle="bold"
+            android:padding="@dimen/item_detail_padding"
             android:paddingEnd="16dp"/>
 
         <TextView
             android:id="@+id/edit_item_quantity"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/item_detail_text_view_size"/>
 
     </LinearLayout>
 
@@ -84,7 +114,9 @@
             android:id="@+id/edit_location_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/location_set"
+            android:text="@string/location"
+            android:textSize="@dimen/item_detail_text_view_size"
+            android:padding="@dimen/item_detail_padding"
             android:textStyle="bold"/>
 
         <Spinner
@@ -108,6 +140,7 @@
 
     <Button
         android:id="@+id/item_detail_delete_button"
+        android:layout_gravity="bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_delete_item"/>

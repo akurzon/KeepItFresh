@@ -65,4 +65,6 @@
     <string name="ok">OK</string>
     <string name="deleted_snackbar">deleted!</string>
     <string name="undo_button">Undo</string>
+    <string name="detail_date_header"><u>Set purchase and expiration dates</u></string>
+    <string name="detail_details_header"><u>Set quantity and location</u></string>
 </resources>

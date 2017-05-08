@@ -14,6 +14,17 @@ public class SettingsFragment extends PreferenceFragment {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
+        // setup the preference toggle
+        Preference toggleNotificationPreference = findPreference("pref_toggle_notifications");
+        toggleNotificationPreference
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ExpirationService.setServiceAlarm(getActivity());
+                return true;
+            }
+        });
+
         // setup the clear history button
         Preference clearHistoryButton = findPreference("pref_clear_history");
         clearHistoryButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

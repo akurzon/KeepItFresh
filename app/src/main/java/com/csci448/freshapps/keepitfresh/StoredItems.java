@@ -297,7 +297,6 @@ public class StoredItems {
 
     public void clearHistory() {
         Toast.makeText(mContext, "everything is gone", Toast.LENGTH_SHORT).show();
-        // TODO: 5/6/17 uncomment for final release
-        // mDatabase.delete(ItemDbSchema.ItemTable.NAME, null, null);
+        mDatabase.delete(ItemDbSchema.ItemTable.NAME, null, null);
     }
 }

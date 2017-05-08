@@ -56,7 +56,6 @@ public class ExpirationService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-
             // get the expired items
             ArrayList<Item> items = (ArrayList<Item>)
                     StoredItems.getInstance(getApplicationContext()).getItemList();
@@ -142,14 +141,23 @@ public class ExpirationService extends IntentService {
      * @param context is the application context
      */
     public static void setServiceAlarm(Context context) {
-        Intent intent = new Intent(context, ExpirationService.class);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean runAlarm = prefs.getBoolean("pref_toggle_notifications", false);
 
+        Intent intent = new Intent(context, ExpirationService.class);
         PendingIntent pi = PendingIntent.getService(context, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager)
                 context.getSystemService(Context.ALARM_SERVICE);
 
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime(), POLL_INTERVAL, pi);
+
+        if (runAlarm) {
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+                    SystemClock.elapsedRealtime(), POLL_INTERVAL, pi);
+        }
+        else {
+            alarmManager.cancel(pi);
+            pi.cancel();
+        }
     }
 
 }

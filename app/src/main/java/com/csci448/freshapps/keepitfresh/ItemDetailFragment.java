@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,7 +33,7 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
     private static final String ITEM_ID = "item_id";
     private static final int REQUEST_EDIT_ITEM = 0;
 
-    private EditText mTitle;
+    private AutoCompleteTextView mTitle;
     private Spinner mLocation;
     private Date mExpireDate, mPurchaseDate;
     private TextView mExpireDateTextView, mPurchaseDateTextView;
@@ -83,7 +84,15 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
         setupDatePickerDialogues();
         setupNumberPickerDialog();
         setupLocationSpinner(v);
-        
+
+
+        // TODO: 5/7/17 save the item names in history even if deleted
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line,
+                mStoredItems.getHistoryListNames().toArray(new String[0]));
+        mTitle.setAdapter(adapter);
+
+
         return v;
     }
 
@@ -114,7 +123,7 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
     }
 
     private void findViewsById(View v) {
-        mTitle = (EditText) v.findViewById(R.id.edit_item_title);
+        mTitle = (AutoCompleteTextView) v.findViewById(R.id.edit_item_title);
         mQuantityHeader = (TextView) v.findViewById(R.id.edit_quantity_header);
         mQuantity = (TextView) v.findViewById(R.id.edit_item_quantity);
         mExpireDateTextView = (TextView) v.findViewById(R.id.expiration_date_text_view);
@@ -188,7 +197,6 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
     }
 
     private void updateUI() {
-        //mItem = mStoredItems.getItem(mItem.getId());
         mTitle.setText(mItem.getName());
         mExpireDateTextView.setText(mDateFormat.format(mItem.getExpirationDate()));
         mPurchaseDateTextView.setText(mDateFormat.format(mItem.getPurchaseDate()));

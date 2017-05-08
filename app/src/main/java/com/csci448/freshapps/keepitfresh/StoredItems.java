@@ -299,4 +299,12 @@ public class StoredItems {
         Toast.makeText(mContext, "everything is gone", Toast.LENGTH_SHORT).show();
         mDatabase.delete(ItemDbSchema.ItemTable.NAME, null, null);
     }
+
+    public List<String> getHistoryListNames() {
+        ArrayList<String> names = new ArrayList<>();
+        for (Item item : mHistoryList) {
+            names.add(item.getName());
+        }
+        return names;
+    }
 }

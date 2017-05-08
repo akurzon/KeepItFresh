@@ -76,6 +76,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                             Item newItem = new Item();
                             newItem.setName(editText.getText().toString());
                             newItem.setOnShoppingList(true);
+                            newItem.setQuantity(0);
                             mStoredItems.addItem(newItem);
                             updateUI();
                             dialog.dismiss();

@@ -265,6 +265,7 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
                 R.layout.support_simple_spinner_dropdown_item,
                 mStoredItems.getLocations());
         mLocation.setAdapter(locationArray);
+        mLocation.setSelection(mStoredItems.getLocations().indexOf(mItem.getLocation()));
     }
 
     @Override

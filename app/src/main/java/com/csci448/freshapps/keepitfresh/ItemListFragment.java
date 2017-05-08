@@ -5,17 +5,23 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ItemListFragment extends Fragment {
+    private static final String TAG = "ItemListFramgent";
 
     private static final int REQUEST_OPTION = 0;
     private static final int REQUEST_NEW_ITEM = 1;
@@ -154,13 +161,22 @@ public class ItemListFragment extends Fragment {
         mItemAdapter.updateItems(mItems);
     }
     
-    private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class ItemHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
         // TODO: 4/29/2017 change this view to look better and have more detail; use list_item_grocery_item.xml
         private TextView mItemNameTextView;
+        private TextView mItemLocationTextView;
         private TextView mExpireDateTextView;
         private TextView mPurchaseDateTextView;
 
         private Item mItem;
+
+        /**
+         * these are used to determine a left or right swipe
+         */
+        private float x1, x2;
+        static final int MIN_DISTANCE = 500;
+        static final int CLICK_DISTANCE = 10;
 
         public ItemHolder(View itemView) {
             super(itemView);
@@ -169,25 +185,75 @@ public class ItemListFragment extends Fragment {
 
             mItemNameTextView = (TextView)
                     itemView.findViewById(R.id.list_item_grocery_item_name_text_view);
+            mItemLocationTextView = (TextView)
+                    itemView.findViewById(R.id.list_item_grocery_item_location);
             mExpireDateTextView = (TextView)
                     itemView.findViewById(R.id.list_item_grocery_item_expire_date_text_view);
             mPurchaseDateTextView = (TextView)
                     itemView.findViewById(R.id.list_item_grocery_item_purchase_date_text_view);
+
+            // TODO: 5/7/2017 onClick does not work when this code is turned on
+            /*itemView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch(event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            Log.i(TAG, mItem.getName() + " action down");
+                            x1 = event.getX();
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            x2 = event.getX();
+                            Log.i(TAG, mItem.getName() + " action up");
+                            float deltaX = x2 - x1;
+                            Log.i(TAG, mItem.getName() + " distance " + String.valueOf(deltaX));
+                            if (Math.abs(deltaX) > MIN_DISTANCE) {
+                                //create a copy in case the user undoes the delete
+                                StoredItems.getInstance(getActivity()).deleteItem(mItem);
+                                String snackbarMessage = mItem.getName() + " " + getString(R.string.deleted_snackbar);
+                                Snackbar sb = Snackbar.make(getActivity().findViewById(R.id.fragment_container), snackbarMessage, Snackbar.LENGTH_SHORT);
+                                sb.setAction(R.string.undo_button, new UndoListener(mItem));
+                                sb.show();
+                            }
+                            break;
+                    }
+                    return true;
+                }
+            });
+            */
         }
 
         public void bindItem(Item item) {
             mItem = item;
             mItemNameTextView.setText(mItem.getName());
+            mItemLocationTextView.setText(mItem.getLocation());
             mExpireDateTextView.setText(getResources().getString(R.string.expire_date_label,
                     mDateFormat.format(mItem.getExpirationDate())));
             mPurchaseDateTextView.setText(getResources().getString(R.string.purchase_date_label,
                     mDateFormat.format(mItem.getPurchaseDate())));
         }
+
         @Override
         public void onClick(View v) {
+            Log.i(TAG, mItem.getName() + " clicked");
             Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(),
                     (ArrayList<Item>) mItems, false);
             startActivityForResult(intent, REQUEST_ITEM_DETAIL);
+        }
+
+        /**
+         * Undo Listener that will save the item back to the database if it is deleted
+         */
+        public class UndoListener implements View.OnClickListener {
+            private Item mUndoItem;
+
+            UndoListener(Item item) {
+                mUndoItem = item;
+            }
+
+            @Override
+            public void onClick(View v) {
+                StoredItems.getInstance(getActivity()).addItem(mUndoItem);
+            }
         }
 
     }

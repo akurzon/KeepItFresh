@@ -90,6 +90,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 return true;
+            // TODO: 5/8/2017 create a settings option 
             case R.id.menu_item_delete_checked_items:
                 for (Item i : mAdapter.mItems) {
                     if (i.isChecked()) {

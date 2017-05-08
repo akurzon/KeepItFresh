@@ -116,7 +116,6 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 mItem.setPurchaseDate(mPurchaseDate);
                 mItem.setQuantity(Integer.valueOf(mQuantity.getText().toString()));
                 mItem.setLocation(mLocation.getSelectedItem().toString());
-                // TODO: 4/3/17 set booleans for item
 
                 mItemSaved = true;
                 if (mIsNewItem) {
@@ -229,10 +228,4 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-//    @Override
-//    protected Fragment createFragment() {
-//        //TODO: 3/29/17 call the new instance function, I don't believe my implementation works because of database changes
-//        //return ItemEditFragment.newInstance();
-//        return new ItemEditFragment();
-//    }
 }

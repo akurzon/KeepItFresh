@@ -46,31 +46,8 @@ public class ItemListActivity extends SingleFragmentActivity {
 
         ExpirationService.setServiceAlarm(this);
 
-        // TODO: 4/3/2017 Change hardcoded strings to locations from database
         mLocations = StoredItems.getInstance(this).getLocations();
         mLocations.add(0, getString(R.string.all));
-
-        //mStores = new LinkedList<String>();
-        //mStores.add(0, getString(R.string.all));
-
-        /**
-         * This code was for the listview in Beta release. We are replacing it with a navigation drawer
-         * to support the shopping list being added here.
-         */
-        /*
-        mDrawerList = (ListView) findViewById(R.id.stored_drawer);
-        // TODO: 4/29/2017 add shopping list to the sidebar layout
-        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mLocations);
-        mDrawerList.setAdapter(mAdapter);
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                ItemListFragment f = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                f.filterListByLocation(mLocations.get(pos));
-                mDrawerLayout.closeDrawers();
-            }
-        });
-        */
 
         /**
          * This code is for the Navigation drawer

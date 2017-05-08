@@ -23,7 +23,6 @@ public class SortOptionsDialogFragment extends DialogFragment {
                 .setItems(R.array.sort_by_options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO: 3/1/17 callback to activity
                         switch (which) {
                             case 0:
                                 Toast.makeText(getActivity(), "Sort by name", Toast.LENGTH_SHORT)

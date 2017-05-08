@@ -87,8 +87,6 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
         return v;
     }
 
-    // TODO: 5/7/2017 check this
-    // this may not work as intended
     @Override
     public void onStop() {
         super.onStop();
@@ -158,9 +156,7 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
                     mStoredItems.addItem(mItem);
                     mIsNewItem = false;
                 }
-                // TODO: 5/7/2017 null object reference here
                 mStoredItems.updateItem(mItem);
-                // TODO: 5/7/2017 figure out how to go back to fragment
                 getActivity().setResult(RESULT_OK);
                 getActivity().finish();
             }
@@ -263,7 +259,6 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
     }
 
     private void setupLocationSpinner(View v) {
-        // TODO: 5/7/2017 location spinner always defaults to fridge 
         mLocation = (Spinner) v.findViewById(R.id.item_location_spinner);
         ArrayAdapter<String> locationArray = new ArrayAdapter<>(
                 getActivity(),

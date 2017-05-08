@@ -179,12 +179,12 @@ public class ItemListFragment extends Fragment {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 ItemAdapter adapter = (ItemAdapter) mRecyclerView.getAdapter();
                 Item undoItem = adapter.remove(swipedPosition);
+
+                //show snackbar, with undo
                 String snackbarMessage = undoItem.getName() + " " + getString(R.string.deleted_snackbar);
                 Snackbar sb = Snackbar.make(getActivity().findViewById(R.id.fragment_container), snackbarMessage, Snackbar.LENGTH_LONG);
                 sb.setAction(R.string.undo_button, new UndoListener(undoItem));
                 sb.show();
-
-
             }
 
         };
@@ -211,7 +211,6 @@ public class ItemListFragment extends Fragment {
     
     private class ItemHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        // TODO: 4/29/2017 change this view to look better and have more detail; use list_item_grocery_item.xml
         private TextView mItemNameTextView;
         private TextView mItemLocationTextView;
         private TextView mExpireDateTextView;

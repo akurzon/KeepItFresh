@@ -263,13 +263,13 @@ public class ItemDetailFragment extends Fragment implements View.OnClickListener
     }
 
     private void setupLocationSpinner(View v) {
-        // TODO: 5/7/2017 location spinner always defaults to fridge 
         mLocation = (Spinner) v.findViewById(R.id.item_location_spinner);
         ArrayAdapter<String> locationArray = new ArrayAdapter<>(
                 getActivity(),
                 R.layout.support_simple_spinner_dropdown_item,
                 mStoredItems.getLocations());
         mLocation.setAdapter(locationArray);
+        mLocation.setSelection(mStoredItems.getLocations().indexOf(mItem.getLocation()));
     }
 
     @Override

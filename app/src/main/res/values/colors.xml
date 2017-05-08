@@ -6,6 +6,7 @@
     <!--I'm keeping this color cuz I like it-->
     <color name="prettyPurple">#B02ED1</color>
     <color name="dark_gray">#808080</color>
+    <color name="light_grey">#D3D3D3</color>
     <color name="itemExpired">#EF4B43</color>
     <color name="itemExpiresSoon1">#E56F69</color>
     <color name="itemExpiresSoon2">#FF8D87</color>

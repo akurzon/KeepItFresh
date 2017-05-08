@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -57,6 +58,7 @@ public class ItemListFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.items_list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        setUpItemTouchHelper();
 
         Drawable divider = ContextCompat.getDrawable(getActivity(), R.drawable.bar_divider);
 
@@ -167,6 +169,52 @@ public class ItemListFragment extends Fragment {
         }
         mItemAdapter.updateItems(mItems);
     }
+
+    /**
+     * This touch helper is used to allow us to swipe on items in our recycler view to delete them.
+     */
+    private void setUpItemTouchHelper() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                int swipedPosition = viewHolder.getAdapterPosition();
+                ItemAdapter adapter = (ItemAdapter) mRecyclerView.getAdapter();
+                Item undoItem = adapter.remove(swipedPosition);
+                String snackbarMessage = undoItem.getName() + " " + getString(R.string.deleted_snackbar);
+                Snackbar sb = Snackbar.make(getActivity().findViewById(R.id.fragment_container), snackbarMessage, Snackbar.LENGTH_LONG);
+                sb.setAction(R.string.undo_button, new UndoListener(undoItem));
+                sb.show();
+
+
+            }
+
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    /**
+     * Undo Listener that will save the item back to the database if it is deleted
+     */
+    private class UndoListener implements View.OnClickListener {
+        private Item mUndoItem;
+
+        UndoListener(Item item) {
+            mUndoItem = item;
+        }
+
+        @Override
+        public void onClick(View v) {
+            StoredItems.getInstance(getActivity()).addItem(mUndoItem);
+            updateUI();
+        }
+    }
     
     private class ItemHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -177,13 +225,6 @@ public class ItemListFragment extends Fragment {
         private TextView mPurchaseDateTextView;
 
         private Item mItem;
-
-        /**
-         * these are used to determine a left or right swipe
-         */
-        private float x1, x2;
-        static final int MIN_DISTANCE = 500;
-        static final int CLICK_DISTANCE = 10;
 
         public ItemHolder(View itemView) {
             super(itemView);
@@ -198,35 +239,6 @@ public class ItemListFragment extends Fragment {
                     itemView.findViewById(R.id.list_item_grocery_item_expire_date_text_view);
             mPurchaseDateTextView = (TextView)
                     itemView.findViewById(R.id.list_item_grocery_item_purchase_date_text_view);
-
-            // TODO: 5/7/2017 onClick does not work when this code is turned on
-            /*itemView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch(event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            Log.i(TAG, mItem.getName() + " action down");
-                            x1 = event.getX();
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            x2 = event.getX();
-                            Log.i(TAG, mItem.getName() + " action up");
-                            float deltaX = x2 - x1;
-                            Log.i(TAG, mItem.getName() + " distance " + String.valueOf(deltaX));
-                            if (Math.abs(deltaX) > MIN_DISTANCE) {
-                                //create a copy in case the user undoes the delete
-                                StoredItems.getInstance(getActivity()).deleteItem(mItem);
-                                String snackbarMessage = mItem.getName() + " " + getString(R.string.deleted_snackbar);
-                                Snackbar sb = Snackbar.make(getActivity().findViewById(R.id.fragment_container), snackbarMessage, Snackbar.LENGTH_SHORT);
-                                sb.setAction(R.string.undo_button, new UndoListener(mItem));
-                                sb.show();
-                            }
-                            break;
-                    }
-                    return true;
-                }
-            });
-            */
         }
 
         public void bindItem(Item item) {
@@ -245,22 +257,6 @@ public class ItemListFragment extends Fragment {
             Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId(),
                     (ArrayList<Item>) mItems, false);
             startActivityForResult(intent, REQUEST_ITEM_DETAIL);
-        }
-
-        /**
-         * Undo Listener that will save the item back to the database if it is deleted
-         */
-        public class UndoListener implements View.OnClickListener {
-            private Item mUndoItem;
-
-            UndoListener(Item item) {
-                mUndoItem = item;
-            }
-
-            @Override
-            public void onClick(View v) {
-                StoredItems.getInstance(getActivity()).addItem(mUndoItem);
-            }
         }
 
     }
@@ -306,6 +302,17 @@ public class ItemListFragment extends Fragment {
         public void updateItems(List<Item> items) {
             mItems = items;
             notifyDataSetChanged();
+        }
+
+        /**
+         * Used with the swipe code to delete an item
+         * @param position
+         */
+        public Item remove(int position) {
+            Item item = mItems.get(position);
+            StoredItems.getInstance(getActivity()).deleteItem(item);
+            updateUI();
+            return item;
         }
 
     }

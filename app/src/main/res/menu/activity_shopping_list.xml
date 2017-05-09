@@ -8,9 +8,16 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/menu_item_settings"
+        android:title="@string/settings_menu_option"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/menu_item_delete_checked_items"
         android:title="@string/delete_checked_items"
         app:showAsAction="never" />
+
+
     <!--<item-->
         <!--android:id="@+id/menu_item_acquire_checked_items"-->
         <!--android:title="@string/acquire_checked_items"-->

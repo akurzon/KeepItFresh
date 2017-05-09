@@ -43,7 +43,7 @@
     <string name="expire_date_label">Expires: %1$s</string>
     <string name="purchase_date_label">Purchased: %1$s</string>
     <string name="all">All</string>
-    <string name="delete_checked_items">delete checked items</string>
+    <string name="delete_checked_items">Delete Checked Items</string>
     <string name="acquire_checked_items">acquire checked items</string>
     <string name="new_shopping_list_item_set">new item</string>
     <string name="hint_shopping_list_new_item">name the new item</string>

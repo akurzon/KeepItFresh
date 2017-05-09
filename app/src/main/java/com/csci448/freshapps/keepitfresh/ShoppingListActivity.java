@@ -101,6 +101,10 @@ public class ShoppingListActivity extends AppCompatActivity {
                 }
                 updateUI();
                 return true;
+            case R.id.menu_item_settings:
+                Intent i = SettingsActivity.newIntent(this);
+                startActivity(i);
+                return true;
             // TODO: 4/3/17 create a way to acquire checked items
 //            case R.id.menu_item_acquire_checked_items:
 //                return true;

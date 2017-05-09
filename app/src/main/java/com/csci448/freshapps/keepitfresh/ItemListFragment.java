@@ -126,6 +126,11 @@ public class ItemListFragment extends Fragment {
         }
     }
 
+    /**
+     * Updates the list displayed.
+     *
+     * Called whenever an item is deleted, saved, or the list is filtered/sorted
+     */
     public void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(getContext());
         switch (mSortOption) {

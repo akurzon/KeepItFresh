@@ -91,6 +91,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 return true;
+            // TODO: 5/8/2017 create a settings option 
             case R.id.menu_item_delete_checked_items:
                 for (Item i : mAdapter.mItems) {
                     if (i.isChecked()) {
@@ -100,6 +101,10 @@ public class ShoppingListActivity extends AppCompatActivity {
                     }
                 }
                 updateUI();
+                return true;
+            case R.id.menu_item_settings:
+                Intent i = SettingsActivity.newIntent(this);
+                startActivity(i);
                 return true;
             // TODO: 4/3/17 create a way to acquire checked items
 //            case R.id.menu_item_acquire_checked_items:

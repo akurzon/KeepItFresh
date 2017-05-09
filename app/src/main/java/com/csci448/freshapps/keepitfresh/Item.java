@@ -93,6 +93,10 @@ public class Item implements Parcelable {
         mIsChecked = checked;
     }
 
+    /**
+     * basic constructor will create an empty item with no quantity and a new ID. Both dates will be
+     * set to today's date
+     */
     public Item() {
         mName = "";
         mExpirationDate = new Date(System.currentTimeMillis());
@@ -103,8 +107,13 @@ public class Item implements Parcelable {
         mIsChecked = false;
         mId = UUID.randomUUID();
     }
+
+    /**
+     * this constructor will create an empty item with no quantity and a given ID. Both dates will be
+     * set to today's date
+     * @param id is a provided ID
+     */
     public Item(UUID id) {
-//        this("");
         mName = "";
         mExpirationDate = new Date(System.currentTimeMillis());
         mPurchaseDate = new Date(System.currentTimeMillis());
@@ -113,7 +122,6 @@ public class Item implements Parcelable {
         mOnShoppingList = false;
         mIsChecked = false;
         mId = id;
-
     }
 
     /**
@@ -143,6 +151,8 @@ public class Item implements Parcelable {
         mId = UUID.randomUUID();
     }
 
+    // getters
+
     public void setName(String name) {
         this.mName = name;
     }
@@ -171,6 +181,10 @@ public class Item implements Parcelable {
         return mId;
     }
 
+    /**
+     * updates the current item with the information provided in the argument item
+     * @param item
+     */
     public void update(Item item) {
         this.mName = item.mName;
         this.mExpirationDate = item.mExpirationDate;
@@ -181,6 +195,13 @@ public class Item implements Parcelable {
         this.mIsChecked = item.mIsChecked;
     }
 
+    /**
+     * this helper method is used for testing item generation. It creates a date that falls between
+     * the two years
+     * @param startYear is the lower bound year
+     * @param endYear is the upper bound year
+     * @return is a Date object that falls between the two given years
+     */
     private Date generateRandomDate(int startYear, int endYear) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(startYear, 1, 1);
@@ -193,10 +214,17 @@ public class Item implements Parcelable {
         return calendar.getTime();
     }
 
+    /**
+     * @return true or false depending on if item is expired
+     */
     public boolean isExpired() {
         return mExpirationDate.getTime() < new Date().getTime();
     }
 
+    /**
+     * @param days is the number of days from the item's expiration date to consider
+     * @return true or false depending on if the item expires in the given number of days
+     */
     public boolean expiresInDays(int days) {
         return mExpirationDate.getTime() < new Date().getTime() + days * DAY_IN_MS;
     }

@@ -104,8 +104,6 @@ public class ItemListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch ((item.getItemId())) {
             case R.id.menu_item_new_item:
-//                Item newItem = new Item();
-//                StoredItems.getInstance(getContext()).addItem(newItem);
                 Intent newItemIntent = ItemPagerActivity.newIntent(
                         getActivity(), null, (ArrayList<Item>) mItems, true);
                 startActivityForResult(newItemIntent, REQUEST_NEW_ITEM);
@@ -130,7 +128,6 @@ public class ItemListFragment extends Fragment {
 
     public void updateUI() {
         StoredItems storedItems = StoredItems.getInstance(getContext());
-//        List<Item> items;
         switch (mSortOption) {
             case EXPIRE:
                 mItems = storedItems.sortByExpirationDate(ItemType.STORED, mLocation);

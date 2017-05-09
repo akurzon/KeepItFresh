@@ -24,6 +24,11 @@ public class StoredItems {
     private SQLiteDatabase mDatabase;
     private Context mContext;
 
+    /**
+     * returns the instance of the singleton
+     * @param context
+     * @return
+     */
     public static StoredItems getInstance(Context context) {
         if (sStoredItems == null) {
             sStoredItems = new StoredItems(context);
@@ -31,6 +36,10 @@ public class StoredItems {
         return sStoredItems;
     }
 
+    /**
+     * private constructor to adhere to singleton design patter
+     * @param context is requesting context
+     */
     private StoredItems(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new ItemDbHelper(mContext).getWritableDatabase();
@@ -38,6 +47,9 @@ public class StoredItems {
 
     }
 
+    /**
+     * this will populate the sub-lists from the database
+     */
     private void pullListsFromDb() {
 
         mHistoryList = new ArrayList<>();
@@ -85,6 +97,10 @@ public class StoredItems {
         }
     }
 
+    /**
+     * adds the string to the table of existing locations
+     * @param location
+     */
     public void addLocation(String location) {
         ContentValues values = new ContentValues();
         values.put(ItemDbSchema.LocationTable.Cols.NAME, location);
@@ -105,6 +121,13 @@ public class StoredItems {
         return new LocationCursorWrapper(cursor);
     }
 
+    /**
+     * creates an ItemCursorWrapper to navigate the database with the given where-clause
+     * @param whereClause is a string describing the where clause
+     * @param whereArgs is a string array containing the arguments that fill in wildcards for the
+     *                  where clause
+     * @return an ItemCursorWrapper pointing to the queried subset of the database
+     */
     private ItemCursorWrapper queryItems(String whereClause, String[] whereArgs) {
 
         Cursor cursor = mDatabase.query(
@@ -120,6 +143,11 @@ public class StoredItems {
         return new ItemCursorWrapper(cursor);
     }
 
+    /**
+     * wraps an item into a ContentValues object to insert it into the database
+     * @param item is the item to be wrapped up
+     * @return a ContentValues object containing the item's member variables
+     */
     private static ContentValues getContentValues(Item item) {
         ContentValues values = new ContentValues();
         values.put(ItemDbSchema.ItemTable.Cols.UUID, item.getId().toString());
@@ -134,6 +162,7 @@ public class StoredItems {
         return values;
     }
 
+    // getters
     public List<String> getLocations() {
         pullListsFromDb();
         return mLocations;
@@ -168,6 +197,11 @@ public class StoredItems {
         mShoppingList.add(i);
     }
 
+    /**
+     * queries the database for an item with the given ID
+     * @param id the ID with which to search the database
+     * @return an item if one is found, null otherwise
+     */
     public Item getItem(UUID id) {
         ItemCursorWrapper cursor = queryItems(
                 ItemDbSchema.ItemTable.Cols.UUID + " = ?",
@@ -187,11 +221,19 @@ public class StoredItems {
         }
     }
 
+    /**
+     * adds an item to the database
+     * @param item is the item to be added
+     */
     public void addItem(Item item) {
         ContentValues values = getContentValues(item);
         mDatabase.insert(ItemDbSchema.ItemTable.NAME, null, values);
     }
 
+    /**
+     * deletes an item from the database
+     * @param item is the item to be deleted
+     */
     public void deleteItem(Item item) {
         String uuidString = item.getId().toString();
         mDatabase.delete(
@@ -258,6 +300,12 @@ public class StoredItems {
         return sortedList;
     }
 
+    /**
+     * filters the item list by a given location
+     * @param items is the list of items to be filtered
+     * @param location is the location
+     * @return a filtered list of items
+     */
     private List<Item> filterByLocation(List<Item> items, String location) {
         ArrayList<Item> filteredItems = new ArrayList<>();
         for (Item item : items) {
@@ -269,18 +317,42 @@ public class StoredItems {
         return filteredItems;
     }
 
+    /**
+     * sorts items by name and filters by location
+     * @param type defines whether the item is in the shopping list or item list
+     * @param location is the location
+     * @return a sorted and filtered item list
+     */
     public List<Item> sortByName(ItemType type, String location) {
         return sortBy(type, "name", location);
     }
 
+    /**
+     * sorts items by expiration date and filters by location
+     * @param type defines whether the item is in the shopping list or item list
+     * @param location is the location
+     * @return a sorted and filtered item list
+     */
     public List<Item> sortByExpirationDate(ItemType type, String location) {
         return sortBy(type, "expirationDate", location);
     }
 
+    /**
+     * sorts items by purchase date and filters by location
+     * @param type defines whether the item is in the shopping list or item list
+     * @param location is the location
+     * @return a sorted and filtered item list
+     */
     public List<Item> sortByPurchaseDate(ItemType type, String location) {
         return sortBy(type, "purchaseDate", location);
     }
 
+
+    /**
+     * queries database for all items that are in a given location
+     * @param location is the location
+     * @return a list of items in the given location
+     */
     public List<Item> getItemsFromLocation(String location) {
         ItemCursorWrapper itemCursor = queryItems("location = ?", new String[] {location});
 

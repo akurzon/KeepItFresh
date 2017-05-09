@@ -13,10 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by Nate on 2/27/2017.
- */
-
 public class ItemPagerActivity extends AppCompatActivity {
     private static final String EXTRA_ITEM_ID = "item_id";
     private static final String EXTRA_SORT_OPTION = "sort_option";
@@ -26,26 +22,24 @@ public class ItemPagerActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private List<Item> mItems;
-    private SortOptions mSortOption;
-    private String mLocation;
     private boolean mIsNewItem;
 
+    /**
+     * creates an intent for this activity which will contain an item ID, a list of items, and a
+     * boolean value for whether or not this activity has been started for a new item or an existing
+     * item
+     * @param context is the requesting context
+     * @param itemId is the item ID
+     * @param items is the list of items in which the item ID sits
+     * @param isNewItem is whether or not the item is new or old and edited
+     * @return an Intent to start this activity
+     */
     public static Intent newIntent(Context context, UUID itemId,
                                    ArrayList<Item> items, boolean isNewItem) {
         Intent intent = new Intent(context, ItemPagerActivity.class);
         intent.putExtra(EXTRA_ITEM_ID, itemId);
         intent.putExtra(EXTRA_ITEM_LIST, items);
         intent.putExtra(EXTRA_NEW_ITEM, isNewItem);
-
-        return intent;
-    }
-
-    public static Intent newIntent(Context context, UUID itemId, SortOptions sortOption,
-                                   String location) {
-        Intent intent = new Intent(context, ItemPagerActivity.class);
-        intent.putExtra(EXTRA_ITEM_ID, itemId);
-        intent.putExtra(EXTRA_SORT_OPTION, sortOption);
-        intent.putExtra(EXTRA_LOCATION, location);
 
         return intent;
     }
@@ -59,21 +53,7 @@ public class ItemPagerActivity extends AppCompatActivity {
         UUID itemId = (UUID) getIntent().getSerializableExtra(EXTRA_ITEM_ID);
         mIsNewItem = (boolean) getIntent().getSerializableExtra(EXTRA_NEW_ITEM);
         mItems = getIntent().getParcelableArrayListExtra(EXTRA_ITEM_LIST);
-//        mSortOption = (SortOptions)getIntent().getSerializableExtra(EXTRA_SORT_OPTION);
-//        mLocation = getIntent().getStringExtra(EXTRA_LOCATION);
         mViewPager = (ViewPager) findViewById(R.id.activity_item_pager_view_pager);
-
-//        switch (mSortOption) {
-//            case EXPIRE:
-//                mItems = StoredItems.getInstance(this).sortByExpirationDate(ItemType.STORED);
-//                break;
-//            case NAME:
-//                mItems = StoredItems.getInstance(this).sortByName(ItemType.STORED);
-//                break;
-//            case PURCHASE:
-//                mItems = StoredItems.getInstance(this).sortByPurchaseDate(ItemType.STORED);
-//                break;
-//        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         /**
